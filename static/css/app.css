@@ -5,6 +5,7 @@ html {
 body {
   font-family: "Lato";
   font-color: white;
+  overflow: hidden;
 }
 
 .navbar {
@@ -25,15 +26,90 @@ button {
   outline: none;
   padding: 0.2rem;
   background-position: center;
+  background-size: cover;
   background-repeat: no-repeat;
   background-color: inherit;
 }
 
+.btn-big {
+  width: 4rem;
+  height: 4rem;
+}
+
 #main-button-back {
-  background-image: url(../img/powrot.svg);
+  background-image: url(../img/icon/back.png);
+}
+
+#main-button-add {
+  background-image: url(../img/icon/add.png);
+}
+
+#btn-type-select-facility {
+  background-image: url(../img/icon/udogodnienia.png);
+}
+
+#btn-type-select-obstacle {
+  background-image: url(../img/icon/przeszkody.png);
+}
+
+#btn-type-select-failure {
+  background-image: url(../img/icon/awaria.png);
+}
+
+#btn-obs-nierownosci {
+  background-image: url(../img/icon/nierownosci.png);
+}
+
+#btn-obs-pochylosc {
+  background-image: url(../img/icon/pochylosc.png);
+}
+
+#btn-obs-prznad {
+  background-image: url(../img/icon/przejscienadziemne.png);
+}
+
+#btn-obs-schody {
+  background-image: url(../img/icon/schody.png);
+}
+
+#btn-obs-kraweznik {
+  background-image: url(../img/icon/wysokikraweznik.png);
 }
 
 section#main-map {
-  height: 1000px;
+  height: 100vh;
   margin-top: 50px;
 }
+
+.action > section#main-map {
+  height: 50vh;
+}
+
+section.action-section {
+  height: 50vh;
+  background-color: white;
+  position: relative;
+}
+
+.action-add > section#main-add {
+  z-index: 10;
+}
+
+.action-details > section#main-details {
+  top: -50vh;
+  z-index: 20;
+}
+
+.action-section header {
+  text-align: center;
+  height: 2arem;
+  line-height: 2rem;
+  background-color: #58bac3;
+  color: white;
+}
+
+.type-select {
+  text-align: center;
+  margin-top: 1rem;
+}
+
