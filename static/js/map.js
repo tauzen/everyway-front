@@ -11,6 +11,12 @@ var markers = [];
 
 var follow = true;
 
+var markerIconPrefix = 'static/img/markers/50/';
+
+var markerIconMap = {
+    "elevator":"winda.png",
+    "slope":"pochylnia.png"
+};
 
 // Sets the map on all markers in the array.
 function setAllMap(map) {
@@ -56,17 +62,38 @@ function updateMarkerAddress(str) {
     document.getElementById('address').innerHTML = str;
 }
 
+
 function addMarkerToMap(markerOptions) {
     var latLng = new google.maps.LatLng(markerOptions.lat, markerOptions.lng);
 
+    if (markerIconMap[markerOptions.kind] === undefined) {
+        var iconPath = null;
+        var image = null;
+    } else {
+        var iconPath = markerIconPrefix + markerIconMap[markerOptions.kind]
+
+        var image = {
+            url: iconPath
+            // This marker is 20 pixels wide by 32 pixels tall.
+            //scaledSize: new google.maps.Size(20, 32),
+            // The origin for this image is 0,0.
+            //origin: new google.maps.Point(0,0),
+            // The anchor for this image is the base of the flagpole at 0,32.
+            //anchor: new google.maps.Point(0, 32)
+        };
+    }
+
     var marker = new google.maps.Marker({
         position: latLng,
-        title: markerOptions.name,
+        title: markerOptions.kind,
         map: map,
-        draggable: true
+        icon: image,
+        draggable: true,
+        customInfo: markerOptions
     });
 
     markers.push(marker);
+
 
     // Add dragging event listeners.
     google.maps.event.addListener(marker, 'dragstart', function() {
@@ -78,9 +105,23 @@ function addMarkerToMap(markerOptions) {
         updateMarkerPosition(marker.getPosition());
     });
 
-    google.maps.event.addListener(marker, 'click', function() {
+    google.maps.event.addListener(marker, 'click', function(e) {
         updateMarkerStatus('Click');
         updateMarkerPosition(marker.getPosition());
+
+        var $md = $('#marker-details');
+
+        $md.children().remove();
+
+        for (var key in marker.customInfo) {
+            //if (marker.hasOwnProperty(key)) {
+                $md.append('<dt>' + key + '</dt><dd>' + marker.customInfo[key] + '</dd>');
+            //}
+        }
+
+        console.log(marker.title)
+        console.log(e)
+
     });
 
     google.maps.event.addListener(marker, 'dragend', function() {
@@ -90,30 +131,60 @@ function addMarkerToMap(markerOptions) {
 }
 
 function getMarkers(bounds) {
-    var markers = [
-        {
-            lat: 52.4023366862351,
-            lng: 16.925666755676275,
-            name: 'A',
-            desc: 'Qwe',
-            type: 1
-        },
-        {
-            lat: 52.40272943253274,
-            lng: 16.926235383987432,
-            name: 'B',
-            desc: 'Qwe2',
-            type: 1
+    $.ajax({
+        url: 'http://everyway.herokuapp.com/marks.json',
+        success: function(data) {
+            addMarkersToMap(data)
         }
-    ]
-
-    return markers;
+    });
 }
 
 function addMarkersToMap(markersOptions) {
     for (i in markersOptions) {
         addMarkerToMap(markersOptions[i])
     }
+}
+
+function addMarker(marker) {
+    $.ajax({
+        url: 'http://everyway.herokuapp.com/marks',
+        method: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        //data: marker,
+        data: '{"lat":"52.401447","lng":"16.926348","category":"facility","kind":"zcxxx","state":"ok"}',
+        success: function() {
+            refresh();
+        }
+    })
+}
+
+function updateMarker(marker) {
+    $.ajax({
+        url: 'http://everyway.herokuapp.com/mark:id',
+        method: 'PUT',
+        data: marker,
+        success: function() {
+
+        }
+    })
+}
+
+function deleteMarker(marker) {
+    $.ajax({
+        url: 'http://everyway.herokuapp.com/mark:id',
+        method: 'DELETE',
+        data: marker,
+        success: function() {
+
+        }
+    })
+}
+
+function refresh() {
+    clearMarkers()
+    var m = getMarkers()
+    addMarkersToMap(m)
 }
 
 $(function() {
@@ -164,24 +235,41 @@ $(function() {
         updateMarkerStatus('Map changed');
         updateMarkerPosition(map.getBounds().getNorthEast());
 
-        clearMarkers()
-        var m = getMarkers()
-        addMarkersToMap(m)
+        refresh();
     });
 
     $('#add-marker').on('click', function(e) {
         e.preventDefault();
 
-        var markerOptions = {
-            lat: map.getCenter().lat(),
-            lng: map.getCenter().lng(),
-            name: 'Nowy',
-            desc: 'Qwe',
-            type: 1
+        var latLng;
+
+        if(navigator.geolocation) {
+            browserSupportFlag = true;
+            navigator.geolocation.getCurrentPosition(function(position) {
+                latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+
+                var markerOptions = {
+                    lat: new String(latLng.lat()),
+                    lng: new String(latLng.lng()),
+                    category: "test",
+                    kind: "test",
+                    state: "ok"
+                }
+
+                addMarker(markerOptions)
+            });
+        } else {
+            latLng = map.getCenter();
+
+            var markerOptions = {
+                lat: new String(latLng.lat()),
+                lng: new String(latLng.lng()),
+                category: "test",
+                kind: "test",
+                state: "ok"
+            }
+
+            addMarker(markerOptions)
         }
-
-        addMarkerToMap(markerOptions);
-
-        return false;
     });
 })
