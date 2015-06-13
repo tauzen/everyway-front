@@ -2,6 +2,8 @@ var main = $('#main');
 var addBtn = $('#main-button-add');
 var backBtn = $('#main-button-back');
 
+var mainAdd = $('#main-add');
+
 var removeAction = function() {
   main.removeClass('action');
   main.removeClass('action-add');
@@ -23,7 +25,8 @@ backBtn.click(function() {
 });
 
 $('#main-add-type-select').click(function(event) {
-  console.log(event);
+  var sectionId = event.target.id;
+  console.log(sectionId);
 });
 
 function init_map(){
