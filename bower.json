@@ -1,0 +1,23 @@
+{
+  "name": "everyway-frontend",
+  "version": "0.0.0",
+  "authors": [
+    "Krzysztof Mioduszewski <kmioduszewski@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4",
+    "jquery": "~2.1.4",
+    "hammer.js": "~2.0.4"
+  },
+  "devDependencies": {
+    "jquery": "~2.1.4"
+  }
+}
