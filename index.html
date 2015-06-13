@@ -25,22 +25,104 @@
     <section id="main">
       <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
-          <div class="navbar-left">
+          <div class="pull-left">
             <button id="main-button-back"></button>
           </div>
-          <p class="navbar-text">mapa</p>
-          <div class="navbar-right">
-            <button id="main-button-back"></button>
+          <p class="pull-left main-title">mapa</p>
+          <div class="pull-right">
+            <button id="main-button-add"></button>
           </div>
         </div>
       </nav>
       <section id="main-map"></section>
-      <section id="main-add"></section>
-      <section id="main-details"></section>
+      <section id="main-add" class="action-section select-type">
+        <header>
+          Dodaj punkt
+        </header>
+        <section id="main-add-type-select">
+          <div class="container type-select">
+            <div class="row">
+              <div class="col-xs-6">
+                <button id="btn-type-select-facility" class="btn-big"></button>
+                <p>udogodnienie</p>
+              </div>
+              <div class="col-xs-6">
+                <button id="btn-type-select-obstacle" class="btn-big">
+                </button>
+                <p>przeszkoda</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="main-add-obstacle">
+          <div class="container type-select">
+            <div class="row">
+              <div class="col-xs-4">
+                <button id="btn-obs-nierownosci" class="btn-big"></button>
+                <p>nierówności</p>
+              </div>
+              <div class="col-xs-4">
+                <button id="btn-obs-prznad" class="btn-big">
+                </button>
+                <p>przejście nadziemne</p>
+              </div>
+              <div class="col-xs-4">
+                <button id="btn-obs-pochylosc" class="btn-big">
+                </button>
+                <p>pochyłość</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-4">
+                <button id="btn-obs-schody" class="btn-big"></button>
+                <p>schody</p>
+              </div>
+              <div class="col-xs-4">
+                <button id="btn-obs-kraweznik" class="btn-big">
+                </button>
+                <p>wysoki krawężnik</p>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="main-add-facility">
+          <div class="container type-select">
+            <div class="row">
+              <div class="col-xs-4">
+                <button id="btn-fac-poch" class="btn-big"></button>
+                <p>pochylnia</p>
+              </div>
+              <div class="col-xs-4">
+                <button id="btn-fac-pod" class="btn-big">
+                </button>
+                <p>podnośnik</p>
+              </div>
+              <div class="col-xs-4">
+                <button id="btn-fac-kraw" class="btn-big">
+                </button>
+                <p>przyjazny krawężnik</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-4">
+                <button id="btn-fac-winda" class="btn-big"></button>
+                <p>winda</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+      <section id="main-details" class="action-section">
+        <header>
+          Opcje punktu
+        </header>
+      </section>
     </section>
     <script src="static/js/jquery.js"></script>
     <script src="static/js/bootstrap.js"></script>
     <script src="static/js/hammer.js"></script>
+    <script src="static/js/polyfills.js"></script>
     <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script src="static/js/map.js"></script>
     <script src="static/js/app.js"></script>
