@@ -1,0 +1,39 @@
+html {
+  font-size: 15px;
+}
+
+body {
+  font-family: "Lato";
+  font-color: white;
+}
+
+.navbar {
+  background-color: #58bac3;
+  color: white;
+  border: none;
+}
+
+.navbar .navbar-text {
+  color: white;
+  font-weight: bold;
+}
+
+button {
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  outline: none;
+  padding: 0.2rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+}
+
+#main-button-back {
+  background-image: url(../img/powrot.svg);
+}
+
+section#main-map {
+  height: 1000px;
+  margin-top: 50px;
+}
