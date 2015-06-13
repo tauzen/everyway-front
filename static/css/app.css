@@ -84,6 +84,22 @@ button {
   background-image: url(../img/icon/wysokikraweznik.png);
 }
 
+#btn-fac-poch {
+  background-image: url(../img/icon/pochylnia.png);
+}
+
+#btn-fac-pod {
+  background-image: url(../img/icon/podnosnik.png);
+}
+
+#btn-fac-kraw {
+  background-image: url(../img/icon/przyjaznykraweznik.png);
+}
+
+#btn-fac-winda {
+  background-image: url(../img/icon/winda.png);
+}
+
 section#main-map {
   height: 100vh;
   margin-top: 50px;
@@ -120,5 +136,29 @@ section.action-section {
 .type-select {
   text-align: center;
   margin-top: 1rem;
+}
+
+.select-facility #main-add-type-select,
+.select-obstacle #main-add-type-select,
+.select-failure #main-add-type-select {
+  display: none;
+}
+
+.select-facility #main-add-obstacle,
+.select-failure #main-add-obstacle,
+.select-type #main-add-obstacle {
+  display: none;
+}
+
+.select-facility #main-add-failure,
+.select-obstacle #main-add-failure,
+.select-type #main-add-failure {
+  display: none;
+}
+
+.select-obstacle #main-add-facility,
+.select-failure #main-add-facility,
+.select-type #main-add-facility {
+  display: none;
 }
 

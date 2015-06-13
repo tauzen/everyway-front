@@ -1,32 +1,53 @@
-var main = $('#main');
+var stateTypeSelection = false;
+
+var mainSection = $('#main');
 var addBtn = $('#main-button-add');
 var backBtn = $('#main-button-back');
 
-var mainAdd = $('#main-add');
+var mainAddSection = $('#main-add');
 
 var removeAction = function() {
-  main.removeClass('action');
-  main.removeClass('action-add');
-  main.removeClass('action-details');
+  mainSection.removeClass('action');
+  mainSection.removeClass('action-add');
+  mainSection.removeClass('action-details');
+};
+
+var backToTypeSelection = function() {
+  mainAddSection.removeClass('select-facility');
+  mainAddSection.removeClass('select-obstacle');
+  mainAddSection.removeClass('select-failure');
+  mainAddSection.addClass('select-type');
 };
 
 var detailsClickHandler = function(event) {
   removeAction();
-  main.toggleClass('action action-details');
+  mainSection.addClass('action action-details');
 };
 
 addBtn.click(function() {
   removeAction();
-  main.toggleClass('action action-add');
+  mainSection.addClass('action action-add');
 }); 
 
 backBtn.click(function() {
-  removeAction();
+  if(stateTypeSelection) {
+    stateTypeSelection = false;
+    backToTypeSelection();
+  } else {
+    removeAction();
+  }
 });
 
 $('#main-add-type-select').click(function(event) {
   var sectionId = event.target.id;
-  console.log(sectionId);
+  if(!sectionId.startsWith('btn-type')) {
+    return;
+  }
+
+  var addClass = sectionId.replace('btn-type-','');
+  mainAddSection.addClass(addClass);
+  mainAddSection.removeClass('select-type');
+  stateTypeSelection = true;
 });
 
 function init_map(){
