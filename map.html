@@ -23,20 +23,30 @@
 </head>
 <body>
 
-<div id="mapCanvas"></div>
-
-<div id="infoPanel">
-    <b>Marker status:</b>
-    <div id="markerStatus"><i>Click and drag the marker.</i></div>
-    <b>Current position:</b>
-    <div id="info"></div>
-    <b>Closest matching address:</b>
-    <div id="address"></div>
+<div class="__row">
+    <div class="col-xs-12">
+        <div id="mapCanvas"></div>
+    </div>
+    <div class="col-xs-6">
+        <dl class="dl-horizontal">
+            <dt>Marker status:</dt><dd id="markerStatus"><i>Click and drag the marker.</i></dd>
+            <dt>Current position:</dt><dd id="info"></dd>
+            <dt>Closest matching address:</dt><dd id="address"></dd>
+        </dl>
+    </div>
+    <div class="col-xs-6">
+        <form action="">
+            <button id="add-marker" class="btn btn-default">Nowy punkt</button>
+        </form>
+    </div>
 </div>
+
+
 
 <script src="static/js/jquery.js"></script>
 <script src="static/js/bootstrap.js"></script>
 <script src="static/js/hammer.js"></script>
+<script src="bower_components/easy-geolocation-marker/src/geolocationmarker-compiled.js"></script>
 <script src="static/js/map.js"></script>
 
 </body>
