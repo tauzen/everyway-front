@@ -12,12 +12,26 @@
 
   var KIND_MAP = {
     'elevator': 'Winda',
-    'stairs': 'Schody'
+    'stairs': 'Schody',
+    'low-curb': 'Przyjazny krawężnik',
+    'high-curb': 'Wysoki krawężnik',
+    'elevator-platform': 'Podnośnik',
+    'cobbles': 'Nierówności',
+    'foot-bridge':'Przejście nadziemne',
+    'ramp':'Pochylnia',
+    'slope':'Duża pochyłość'
   };
 
   var IMG_MAP = {
     'elevator': 'icon-fac-winda',
-    'stairs': 'icon-obs-schody'
+    'stairs': 'icon-obs-schody',
+    'low-curb': 'icon-fac-kraw',
+    'high-curb': 'icon-obs-kraweznik',
+    'elevator-platform': 'icon-fac-pod',
+    'cobbles': 'icon-obs-nierownosci',
+    'foot-bridge':'icon-obs-prznad',
+    'ramp':'icon-fac-poch',
+    'slope':'icon-obs-pochylosc'
   };
 
   var stateTypeSelection = false;
@@ -121,6 +135,7 @@
     };
     
     addMarkerHandler(marker);
+    removeAction();
   });
 
   //add facility
@@ -136,6 +151,7 @@
     };
 
     addMarkerHandler(marker);
+    removeAction();
   });
 
   exports.UI = {
@@ -144,17 +160,3 @@
   };
 
 }((typeof exports === 'undefined') ? window : exports));
-
-/*var currentMarker = { category: 'facility', kind: 'elevator', votes: 15 };
-
-function init_map(){
-    var myOptions = {zoom:15, center:new google.maps.LatLng(52.221973,21.01772600000004), mapTypeId:google.maps.MapTypeId.ROADMAP, scrollwheel:false};
-
-    var map = new google.maps.Map(document.getElementById("main-map"), myOptions);
-    var marker = new google.maps.Marker({map: map,position: new google.maps.LatLng(52.221973, 21.01772600000004)});
-    google.maps.event.addListener(marker, "click", function(){
-      UI.showDetails(currentMarker);
-    });
-}
-
-google.maps.event.addDomListener(window, 'load', init_map);*/
