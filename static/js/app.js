@@ -1,122 +1,151 @@
 'use strict';
 
 /* globals $, google */
+/* exported UI */
 
-var CATEGORY_MAP = {
-  'facility': 'Udogodnienie',
-  'obstacle': 'Przeszkoda'
-};
+(function(exports) {
 
-var KIND_MAP = {
-  'elevator': 'Winda',
-  'stairs': 'Schody'
-};
+  var CATEGORY_MAP = {
+    'facility': 'Udogodnienie',
+    'obstacle': 'Przeszkoda'
+  };
 
-var IMG_MAP = {
-  'elevator': 'icon-fac-winda',
-  'stairs': 'icon-obs-schody'
-};
+  var KIND_MAP = {
+    'elevator': 'Winda',
+    'stairs': 'Schody'
+  };
 
-var stateTypeSelection = false;
-var currentMarker = { category: 'facility', kind: 'elevator', votes: 15 };
+  var IMG_MAP = {
+    'elevator': 'icon-fac-winda',
+    'stairs': 'icon-obs-schody'
+  };
 
-var mainSection = $('#main');
-var addBtn = $('#main-button-add');
-var backBtn = $('#main-button-back');
+  var stateTypeSelection = false;
 
-var mainAddSection = $('#main-add');
+  var mainSection = $('#main');
+  var addBtn = $('#main-button-add');
+  var backBtn = $('#main-button-back');
 
-var removeAction = function() {
-  mainSection.removeClass('action');
-  mainSection.removeClass('action-add');
-  mainSection.removeClass('action-details');
-};
+  var mainAddSection = $('#main-add');
 
-var backToTypeSelection = function() {
-  mainAddSection.removeClass('select-facility');
-  mainAddSection.removeClass('select-obstacle');
-  mainAddSection.removeClass('select-failure');
-  mainAddSection.addClass('select-type');
-};
+  var removeAction = function() {
+    mainSection.removeClass('action');
+    mainSection.removeClass('action-add');
+    mainSection.removeClass('action-details');
+  };
 
-var updateDetailsView = function(marker) {
-  $('#main-details-type').text(CATEGORY_MAP[marker.category]);
-  $('#main-details-category').text(KIND_MAP[marker.kind]);
-  $('#main-details-upvotes-count').text(marker.votes);
+  var backToTypeSelection = function() {
+    mainAddSection.removeClass('select-facility');
+    mainAddSection.removeClass('select-obstacle');
+    mainAddSection.removeClass('select-failure');
+    mainAddSection.addClass('select-type');
+  };
 
-  $('#main-details-img').removeClass();
-  $('#main-details-img').addClass('icon icon-big ' + IMG_MAP[marker.kind]);
+  var updateDetailsView = function(marker) {
+    $('#main-details-type').text(CATEGORY_MAP[marker.category]);
+    $('#main-details-category').text(KIND_MAP[marker.kind]);
+    $('#main-details-upvotes-count').text(marker.votes);
 
-  if(marker.category === 'obstacle') {
-    $('#main-details').removeClass('type-facility');
-    $('#main-details').addClass('type-obstacle');
-  } else {
-    $('#main-details').removeClass('type-obstacle');
-    $('#main-details').addClass('type-facility');
-  }
-};
+    $('#main-details-img').removeClass();
+    $('#main-details-img').addClass('icon icon-big ' + IMG_MAP[marker.kind]);
 
-var detailsClickHandler = function(event) {
-  removeAction();
-  mainSection.addClass('action action-details');
-  updateDetailsView(currentMarker);
-};
+    if(marker.category === 'obstacle') {
+      $('#main-details').removeClass('type-facility');
+      $('#main-details').addClass('type-obstacle');
+    } else {
+      $('#main-details').removeClass('type-obstacle');
+      $('#main-details').addClass('type-facility');
+    }
+  };
 
-addBtn.click(function() {
-  removeAction();
-  mainSection.addClass('action action-add');
-}); 
-
-backBtn.click(function() {
-  if(stateTypeSelection) {
-    stateTypeSelection = false;
-    backToTypeSelection();
-  } else {
+  var showDetails = function(marker) {
     removeAction();
-  }
-});
+    mainSection.addClass('action action-details');
+    updateDetailsView(marker);
+  };
 
-var getClickedElementType = function(prefix, event) {
-  var sectionId = event.target.id;
-  if(!sectionId.startsWith(prefix)) {
-    return null;
-  }
+  addBtn.click(function() {
+    removeAction();
+    mainSection.addClass('action action-add');
+  }); 
 
-  var elType = sectionId.replace(prefix, '');
-  return elType;
-};
+  backBtn.click(function() {
+    if(stateTypeSelection) {
+      stateTypeSelection = false;
+      backToTypeSelection();
+    } else {
+      removeAction();
+    }
+  });
 
-// type selection
-$('#main-add-type-select').click(function(event) {
-  var elType = getClickedElementType('btn-type-', event);
-  if(!elType) {
-    return;
-  }
+  var getClickedElementType = function(prefix, event) {
+    var sectionId = event.target.id;
+    if(!sectionId.startsWith(prefix)) {
+      return null;
+    }
 
-  mainAddSection.addClass(elType);
-  mainAddSection.removeClass('select-type');
-  stateTypeSelection = true;
-});
+    var elType = sectionId.replace(prefix, '');
+    return elType;
+  };
 
-// add obstacle
-$('#main-add-obstacle').click(function(event) {
-  var elType = getClickedElementType('btn-obs-', event);
-  if(!elType) {
-    return;
-  }
+  // type selection
+  $('#main-add-type-select').click(function(event) {
+    var elType = getClickedElementType('btn-type-', event);
+    if(!elType) {
+      return;
+    }
 
-  console.log('clicked '  + elType);
-});
+    mainAddSection.addClass(elType);
+    mainAddSection.removeClass('select-type');
+    stateTypeSelection = true;
+  });
 
-//add facility
-$('#main-add-facility').click(function(event) {
-  var elType = getClickedElementType('btn-fac-', event);
-  if(!elType) {
-    return;
-  }
+  var addMarkerHandler = function(marker) {
+    console.log(marker);
+  };
 
-  console.log('clicked ' + elType);
-});
+  var setAddMarkerHandler = function(cb) {
+    addMarkerHandler = cb;
+  };
+
+  // add obstacle
+  $('#main-add-obstacle').click(function(event) {
+    var elType = getClickedElementType('btn-obs-', event);
+    if(!elType) {
+      return;
+    }
+
+    var marker = {
+      kind: $(event.target).data('markerKind'),
+      category: 'obstacle'
+    };
+    
+    addMarkerHandler(marker);
+  });
+
+  //add facility
+  $('#main-add-facility').click(function(event) {
+    var elType = getClickedElementType('btn-fac-', event);
+    if(!elType) {
+      return;
+    }
+
+    var marker = {
+      kind: $(event.target).data('markerKind'),
+      category: 'facility'
+    };
+
+    addMarkerHandler(marker);
+  });
+
+  exports.UI = {
+    showDetails: showDetails,
+    setAddMarkerHandler: setAddMarkerHandler 
+  };
+
+}((typeof exports === 'undefined') ? window : exports));
+
+/*var currentMarker = { category: 'facility', kind: 'elevator', votes: 15 };
 
 function init_map(){
     var myOptions = {zoom:15, center:new google.maps.LatLng(52.221973,21.01772600000004), mapTypeId:google.maps.MapTypeId.ROADMAP, scrollwheel:false};
@@ -124,8 +153,8 @@ function init_map(){
     var map = new google.maps.Map(document.getElementById("main-map"), myOptions);
     var marker = new google.maps.Marker({map: map,position: new google.maps.LatLng(52.221973, 21.01772600000004)});
     google.maps.event.addListener(marker, "click", function(){
-      detailsClickHandler();
+      UI.showDetails(currentMarker);
     });
 }
 
-google.maps.event.addDomListener(window, 'load', init_map);
+google.maps.event.addDomListener(window, 'load', init_map);*/
