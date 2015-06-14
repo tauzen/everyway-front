@@ -145,7 +145,7 @@
 
 }((typeof exports === 'undefined') ? window : exports));
 
-var currentMarker = { category: 'facility', kind: 'elevator', votes: 15 };
+/*var currentMarker = { category: 'facility', kind: 'elevator', votes: 15 };
 
 function init_map(){
     var myOptions = {zoom:15, center:new google.maps.LatLng(52.221973,21.01772600000004), mapTypeId:google.maps.MapTypeId.ROADMAP, scrollwheel:false};
@@ -157,4 +157,4 @@ function init_map(){
     });
 }
 
-google.maps.event.addDomListener(window, 'load', init_map);
+google.maps.event.addDomListener(window, 'load', init_map);*/

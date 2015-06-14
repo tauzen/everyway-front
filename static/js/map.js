@@ -1,3 +1,7 @@
+'use strict';
+
+/* globals google, $, UI, GeolocationMarker */
+
 /**
  * Created by ppaw on 2015-06-13.
  */
@@ -8,6 +12,7 @@ var startLng = 16.925666755676275;
 
 var map;
 var markers = [];
+var browserSupportFlag = false;
 
 var follow = true;
 
@@ -47,13 +52,11 @@ function showMarkers() {
 function addMarkerToMap(markerOptions) {
     var latLng = new google.maps.LatLng(markerOptions.lat, markerOptions.lng);
 
-    if (markerIconMap[markerOptions.kind] === undefined) {
-        var iconPath = null;
-        var image = null;
-    } else {
-        var iconPath = markerIconPrefix + markerIconMap[markerOptions.kind]
-
-        var image = {
+    var iconPath = null;
+    var image = null;
+    if (markerIconMap[markerOptions.kind]) {
+        iconPath = markerIconPrefix + markerIconMap[markerOptions.kind]
+        image = {
             url: iconPath
         };
     }
@@ -72,7 +75,7 @@ function addMarkerToMap(markerOptions) {
     google.maps.event.addListener(marker, 'click', function(e) {
         currentMarker = marker;
 
-        UI.showDetails(marker.customInfo)
+        UI.showDetails(marker.customInfo);
     });
 
     google.maps.event.addListener(marker, 'dragend', function() {
@@ -84,14 +87,14 @@ function getMarkers(bounds) {
     $.ajax({
         url: 'http://everyway.herokuapp.com/marks.json',
         success: function(data) {
-            addMarkersToMap(data)
+            addMarkersToMap(data);
         }
     });
 }
 
 function addMarkersToMap(markersOptions) {
-    for (i in markersOptions) {
-        addMarkerToMap(markersOptions[i])
+    for (var i in markersOptions) {
+        addMarkerToMap(markersOptions[i]);
     }
 }
 
@@ -99,9 +102,9 @@ function newMarker(markerOptions) {
     var defaultMarkerOptions = {
         lat: startLat,
         lng: startLng,
-        category: "test",
-        kind: "test",
-        state: "ok"
+        category: 'test',
+        kind: 'test',
+        state: 'ok'
     };
 
     markerOptions = $.extend(defaultMarkerOptions, markerOptions);
@@ -116,12 +119,12 @@ function newMarker(markerOptions) {
                 refresh();
             },
             error: function(e, textStatus, errorThrown) {
-                console.log(e)
-                console.log(textStatus)
-                console.log(errorThrown)
+                console.log(e);
+                console.log(textStatus);
+                console.log(errorThrown);
             }
-        })
-    }
+        });
+    };
 
     if(navigator.geolocation) {
         browserSupportFlag = true;
@@ -129,21 +132,23 @@ function newMarker(markerOptions) {
             var latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
 
             markerOptions = $.extend(markerOptions, {
-                lat: new String(latLng.lat()),
-                lng: new String(latLng.lng())
+                lat: String(latLng.lat()),
+                lng: String(latLng.lng())
             });
 
-            ajaxPost(markerOptions)
+            ajaxPost(markerOptions);
+        }, function(error) {
+            console.error(error);
         });
     } else {
         var latLng = map.getCenter();
 
         markerOptions = $.extend(markerOptions, {
-            lat: new String(latLng.lat()),
-            lng: new String(latLng.lng())
+            lat: String(latLng.lat()),
+            lng: String(latLng.lng())
         });
 
-        ajaxPost(markerOptions)
+        ajaxPost(markerOptions);
     }
 }
 
@@ -162,11 +167,11 @@ function updateMarker(marker) {
             refresh();
         },
         error: function(e, textStatus, errorThrown) {
-            console.log(e)
-            console.log(textStatus)
-            console.log(errorThrown)
+            console.log(e);
+            console.log(textStatus);
+            console.log(errorThrown);
         }
-    })
+    });
 }
 
 function deleteMarker(marker) {
@@ -180,13 +185,13 @@ function deleteMarker(marker) {
         success: function() {
             refresh();
         }
-    })
+    });
 }
 
 function refresh() {
-    clearMarkers()
-    var m = getMarkers()
-    addMarkersToMap(m)
+    clearMarkers();
+    var m = getMarkers();
+    addMarkersToMap(m);
 }
 
 $(function() {
@@ -213,7 +218,7 @@ $(function() {
     if(navigator.geolocation) {
         browserSupportFlag = true;
         navigator.geolocation.getCurrentPosition(function(position) {
-            initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+            var initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
             map.setCenter(initialLocation);
         }, function() {
             handleNoGeolocation(browserSupportFlag);
@@ -226,14 +231,11 @@ $(function() {
     }
 
     function handleNoGeolocation(errorFlag) {
-        if (errorFlag == true) {
-            alert("Geolocation service failed.");
-            initialLocation = newyork;
+        if (errorFlag === true) {
+            alert('Geolocation service failed.');
         } else {
-            alert("Your browser doesn't support geolocation. We've placed you in Siberia.");
-            initialLocation = siberia;
+            alert('Your browser doesn\'t support geolocation. We\'ve placed you in Siberia.');
         }
-        map.setCenter(initialLocation);
     }
 
     refresh();
@@ -253,5 +255,5 @@ $(function() {
     //    deleteMarker(currentMarker);
     //});
 
-    UI.setAddMarkerHandler(newMarker)
+    UI.setAddMarkerHandler(newMarker);
 })
