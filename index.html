@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
+    <title>EasyCity</title>
 
     <!-- Bootstrap -->
     <link href="static/css/bootstrap.css" rel="stylesheet">
@@ -58,27 +58,27 @@
           <div class="container type-select">
             <div class="row">
               <div class="col-xs-4">
-                <button id="btn-obs-nierownosci" class="btn-big"></button>
+                <button id="btn-obs-nierownosci" class="icon-obs-nierownosci btn-big"></button>
                 <p>nierówności</p>
               </div>
               <div class="col-xs-4">
-                <button id="btn-obs-prznad" class="btn-big">
+                <button id="btn-obs-prznad" class="icon-obs-prznad btn-big">
                 </button>
                 <p>przejście nadziemne</p>
               </div>
               <div class="col-xs-4">
-                <button id="btn-obs-pochylosc" class="btn-big">
+                <button id="btn-obs-pochylosc" class="icon-obs-pochylosc btn-big">
                 </button>
                 <p>pochyłość</p>
               </div>
             </div>
             <div class="row">
               <div class="col-xs-4">
-                <button id="btn-obs-schody" class="btn-big"></button>
+                <button id="btn-obs-schody" class="icon-obs-schody btn-big"></button>
                 <p>schody</p>
               </div>
               <div class="col-xs-4">
-                <button id="btn-obs-kraweznik" class="btn-big">
+                <button id="btn-obs-kraweznik" class="icon-obs-kraweznik btn-big">
                 </button>
                 <p>wysoki krawężnik</p>
               </div>
@@ -90,33 +90,55 @@
           <div class="container type-select">
             <div class="row">
               <div class="col-xs-4">
-                <button id="btn-fac-poch" class="btn-big"></button>
+                <button id="btn-fac-poch" class="icon-fac-poch btn-big"></button>
                 <p>pochylnia</p>
               </div>
               <div class="col-xs-4">
-                <button id="btn-fac-pod" class="btn-big">
+                <button id="btn-fac-pod" class="icon-fac-pod btn-big">
                 </button>
                 <p>podnośnik</p>
               </div>
               <div class="col-xs-4">
-                <button id="btn-fac-kraw" class="btn-big">
+                <button id="btn-fac-kraw" class="icon-fac-kraw btn-big">
                 </button>
                 <p>przyjazny krawężnik</p>
               </div>
             </div>
             <div class="row">
               <div class="col-xs-4">
-                <button id="btn-fac-winda" class="btn-big"></button>
+                <button id="btn-fac-winda" class="icon-fac-winda btn-big"></button>
                 <p>winda</p>
               </div>
             </div>
           </div>
         </section>
       </section>
-      <section id="main-details" class="action-section">
-        <header>
-          Opcje punktu
+      <section id="main-details" class="action-section type-obstacle">
+        <header id="main-details-type">
+          Punkt
         </header>
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-4">
+              <div id="main-details-img" class="icon icon-big icon-obs-schody">
+              </div>
+            </div>
+            <div class="col-xs-8">
+              <p id="main-details-category">Schody</p>
+              <p id="main-details-upvotes">
+                <span class="error"><span id="main-details-upvotes-count">10</span> osobom</span> to przeszkadza
+              </p>
+            </div>
+          </div>
+          <div class="row main-details-actions">
+            <div class="col-xs-12">
+              <button id="btn-action-przeszkadzami" class="icon-action-przeszkadzami btn-big przeszkadzami"></button>
+              <p class="przeszkadzami">Przeszkadza mi to!</p>
+              <button id="btn-action-awaria" class="awaria icon-action-awaria btn-big"></button>
+              <p class="awaria">Awaria!</p>
+            </div>
+          </div>
+        </div>
       </section>
     </section>
     <script src="static/js/jquery.js"></script>
