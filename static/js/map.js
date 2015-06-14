@@ -44,33 +44,6 @@ function showMarkers() {
     setAllMap(map);
 }
 
-function geocodePosition(pos) {
-    geocoder.geocode({
-        latLng: pos
-    }, function(responses) {
-        if (responses && responses.length > 0) {
-            updateMarkerAddress(responses[0].formatted_address);
-        } else {
-            updateMarkerAddress('Cannot determine address at this location.');
-        }
-    });
-}
-
-function updateMarkerStatus(str) {
-    document.getElementById('markerStatus').innerHTML = str;
-}
-
-function updateMarkerPosition(latLng) {
-    document.getElementById('info').innerHTML = [
-        latLng.lat(),
-        latLng.lng()
-    ].join(', ');
-}
-
-function updateMarkerAddress(str) {
-    document.getElementById('address').innerHTML = str;
-}
-
 function addMarkerToMap(markerOptions) {
     var latLng = new google.maps.LatLng(markerOptions.lat, markerOptions.lng);
 
@@ -82,12 +55,6 @@ function addMarkerToMap(markerOptions) {
 
         var image = {
             url: iconPath
-            // This marker is 20 pixels wide by 32 pixels tall.
-            //scaledSize: new google.maps.Size(20, 32),
-            // The origin for this image is 0,0.
-            //origin: new google.maps.Point(0,0),
-            // The anchor for this image is the base of the flagpole at 0,32.
-            //anchor: new google.maps.Point(0, 32)
         };
     }
 
@@ -102,21 +69,7 @@ function addMarkerToMap(markerOptions) {
 
     markers.push(marker);
 
-
-    // Add dragging event listeners.
-    google.maps.event.addListener(marker, 'dragstart', function() {
-        updateMarkerAddress('Dragging...');
-    });
-
-    google.maps.event.addListener(marker, 'drag', function() {
-        updateMarkerStatus('Dragging...');
-        updateMarkerPosition(marker.getPosition());
-    });
-
     google.maps.event.addListener(marker, 'click', function(e) {
-        updateMarkerStatus('Click');
-        updateMarkerPosition(marker.getPosition());
-
         currentMarker = marker;
 
         var $md = $('#marker-details');
@@ -124,20 +77,11 @@ function addMarkerToMap(markerOptions) {
         $md.children().remove();
 
         for (var key in marker.customInfo) {
-            //if (marker.hasOwnProperty(key)) {
-                $md.append('<dt>' + key + '</dt><dd>' + marker.customInfo[key] + '</dd>');
-            //}
+            $md.append('<dt>' + key + '</dt><dd>' + marker.customInfo[key] + '</dd>');
         }
-
-        console.log(marker.title)
-        console.log(e)
-
     });
 
     google.maps.event.addListener(marker, 'dragend', function() {
-        updateMarkerStatus('Drag ended');
-        geocodePosition(marker.getPosition());
-
         updateMarker(marker);
     });
 }
@@ -157,21 +101,56 @@ function addMarkersToMap(markersOptions) {
     }
 }
 
-function addMarker(marker) {
-    $.ajax({
-        url: 'http://everyway.herokuapp.com/marks',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(marker),
-        success: function() {
-            refresh();
-        },
-        error: function(e, textStatus, errorThrown) {
-            console.log(e)
-            console.log(textStatus)
-            console.log(errorThrown)
-        }
-    })
+function newMarker(markerOptions) {
+    var defaultMarkerOptions = {
+        lat: startLat,
+        lng: startLng,
+        category: "test",
+        kind: "test",
+        state: "ok"
+    };
+
+    markerOptions = $.extend(defaultMarkerOptions, markerOptions);
+
+    var ajaxPost = function(marker) {
+        $.ajax({
+            url: 'http://everyway.herokuapp.com/marks',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(marker),
+            success: function() {
+                refresh();
+            },
+            error: function(e, textStatus, errorThrown) {
+                console.log(e)
+                console.log(textStatus)
+                console.log(errorThrown)
+            }
+        })
+    }
+
+    if(navigator.geolocation) {
+        browserSupportFlag = true;
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+
+            markerOptions = $.extend(markerOptions, {
+                lat: new String(latLng.lat()),
+                lng: new String(latLng.lng())
+            });
+
+            ajaxPost(markerOptions)
+        });
+    } else {
+        var latLng = map.getCenter();
+
+        markerOptions = $.extend(markerOptions, {
+            lat: new String(latLng.lat()),
+            lng: new String(latLng.lng())
+        });
+
+        ajaxPost(markerOptions)
+    }
 }
 
 function updateMarker(marker) {
@@ -217,16 +196,12 @@ function refresh() {
 }
 
 $(function() {
-    // Update current position info.
-    //updateMarkerPosition(latLng);
-    //geocodePosition(latLng);
     var startCenter = new google.maps.LatLng(startLat, startLng);
     map = new google.maps.Map(document.getElementById('mapCanvas'), {
         zoom: 19,
         center: startCenter,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         disableDefaultUI: true,
-        //scaleControl: true
         zoomControl: true
     });
 
@@ -269,44 +244,13 @@ $(function() {
 
     refresh();
 
-    google.maps.event.addListener(map, 'bounds_changed', function(e) {
-        updateMarkerStatus('Map changed');
-        updateMarkerPosition(map.getBounds().getNorthEast());
-    });
-
     $('#add-marker').on('click', function(e) {
         e.preventDefault();
 
-        var latLng;
-
-        if(navigator.geolocation) {
-            browserSupportFlag = true;
-            navigator.geolocation.getCurrentPosition(function(position) {
-                latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-
-                var markerOptions = {
-                    lat: new String(latLng.lat()),
-                    lng: new String(latLng.lng()),
-                    category: "test",
-                    kind: "test",
-                    state: "ok"
-                }
-
-                addMarker(markerOptions)
-            });
-        } else {
-            latLng = map.getCenter();
-
-            var markerOptions = {
-                lat: new String(latLng.lat()),
-                lng: new String(latLng.lng()),
-                category: "test",
-                kind: "test",
-                state: "ok"
-            }
-
-            addMarker(markerOptions)
-        }
+        newMarker({
+            'category': 'qwe',
+            'kind': 'zxc'
+        })
     });
 
     $('#delete-marker').on('click', function(e) {
