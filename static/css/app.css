@@ -24,7 +24,13 @@ body {
 }
 
 .main-title {
-  padding-left: 2rem;
+  background-image: url(../img/logo.png);
+  width: 200px;
+  height: 35px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-top: 0.2rem;
+  margin-left: 1rem;
 }
 
 button, .icon {
@@ -114,11 +120,11 @@ section#main-map {
 }
 
 .action > section#main-map {
-  height: 50vh;
+  height: 40vh;
 }
 
 section.action-section {
-  height: 50vh;
+  height: 60vh;
   background-color: white;
   position: relative;
 }
@@ -128,7 +134,7 @@ section.action-section {
 }
 
 .action-details > section#main-details {
-  top: -50vh;
+  top: -60vh;
   z-index: 20;
 }
 

@@ -264,4 +264,4 @@ $(function() {
     //});
 
     UI.setAddMarkerHandler(newMarker);
-})
+});
