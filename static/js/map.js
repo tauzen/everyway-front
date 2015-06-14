@@ -11,11 +11,18 @@ var markers = [];
 
 var follow = true;
 
-var markerIconPrefix = 'static/img/markers/50/';
+var markerIconPrefix = 'static/img/markers/';
 
 var markerIconMap = {
+    "low-curb":"przyjaznykraweznik.png",
+    "high-curb":"wysokikraweznik.png",
+    "stairs":"schody.png",
     "elevator":"winda.png",
-    "slope":"pochylnia.png"
+    "elevator-platform":"podnosnik.png",
+    "cobbles":"nierownosci.png",
+    "foot-bridge":"przejscienadziemne.png",
+    "ramp":"pochylnia.png",
+    "slope":"pochylosc.png"
 };
 
 var currentMarker;
@@ -63,7 +70,6 @@ function updateMarkerPosition(latLng) {
 function updateMarkerAddress(str) {
     document.getElementById('address').innerHTML = str;
 }
-
 
 function addMarkerToMap(markerOptions) {
     var latLng = new google.maps.LatLng(markerOptions.lat, markerOptions.lng);
