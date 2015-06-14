@@ -18,6 +18,8 @@ var markerIconMap = {
     "slope":"pochylnia.png"
 };
 
+var currentMarker;
+
 // Sets the map on all markers in the array.
 function setAllMap(map) {
     for (var i = 0; i < markers.length; i++) {
@@ -109,6 +111,8 @@ function addMarkerToMap(markerOptions) {
         updateMarkerStatus('Click');
         updateMarkerPosition(marker.getPosition());
 
+        currentMarker = marker;
+
         var $md = $('#marker-details');
 
         $md.children().remove();
@@ -187,12 +191,15 @@ function updateMarker(marker) {
 }
 
 function deleteMarker(marker) {
-    $.ajax({
-        url: 'http://everyway.herokuapp.com/mark:id',
-        method: 'DELETE',
-        data: marker,
-        success: function() {
+    var m = marker.customInfo;
 
+    $.ajax({
+        url: 'http://everyway.herokuapp.com/marks/' + m.id,
+        method: 'DELETE',
+        contentType: 'application/json',
+        data: JSON.stringify(m),
+        success: function() {
+            refresh();
         }
     })
 }
@@ -209,7 +216,7 @@ $(function() {
     //geocodePosition(latLng);
     var startCenter = new google.maps.LatLng(startLat, startLng);
     map = new google.maps.Map(document.getElementById('mapCanvas'), {
-        zoom: 17,
+        zoom: 19,
         center: startCenter,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         disableDefaultUI: true,
@@ -218,6 +225,14 @@ $(function() {
     });
 
     var GeoMarker = new GeolocationMarker(map);
+
+    GeoMarker.setCircleOptions({
+        visible: false
+    });
+
+    GeoMarker.setMarkerOptions({
+        zIndex: 999
+    });
 
     // Try W3C Geolocation (Preferred)
     if(navigator.geolocation) {
@@ -251,8 +266,6 @@ $(function() {
     google.maps.event.addListener(map, 'bounds_changed', function(e) {
         updateMarkerStatus('Map changed');
         updateMarkerPosition(map.getBounds().getNorthEast());
-
-        //refresh();
     });
 
     $('#add-marker').on('click', function(e) {
@@ -288,5 +301,11 @@ $(function() {
 
             addMarker(markerOptions)
         }
+    });
+
+    $('#delete-marker').on('click', function(e) {
+        e.preventDefault();
+
+        deleteMarker(currentMarker);
     });
 })
