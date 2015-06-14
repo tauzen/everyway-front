@@ -127,6 +127,8 @@ function addMarkerToMap(markerOptions) {
     google.maps.event.addListener(marker, 'dragend', function() {
         updateMarkerStatus('Drag ended');
         geocodePosition(marker.getPosition());
+
+        updateMarker(marker);
     });
 }
 
@@ -149,23 +151,37 @@ function addMarker(marker) {
     $.ajax({
         url: 'http://everyway.herokuapp.com/marks',
         method: 'POST',
-        dataType: 'json',
         contentType: 'application/json',
-        //data: marker,
-        data: '{"lat":"52.401447","lng":"16.926348","category":"facility","kind":"zcxxx","state":"ok"}',
+        data: JSON.stringify(marker),
         success: function() {
             refresh();
+        },
+        error: function(e, textStatus, errorThrown) {
+            console.log(e)
+            console.log(textStatus)
+            console.log(errorThrown)
         }
     })
 }
 
 function updateMarker(marker) {
-    $.ajax({
-        url: 'http://everyway.herokuapp.com/mark:id',
-        method: 'PUT',
-        data: marker,
-        success: function() {
+    var m = marker.customInfo;
 
+    m.lat = marker.getPosition().lat();
+    m.lng = marker.getPosition().lng();
+
+    $.ajax({
+        url: 'http://everyway.herokuapp.com/marks/' + m.id,
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(m),
+        success: function() {
+            refresh();
+        },
+        error: function(e, textStatus, errorThrown) {
+            console.log(e)
+            console.log(textStatus)
+            console.log(errorThrown)
         }
     })
 }
@@ -230,12 +246,13 @@ $(function() {
         map.setCenter(initialLocation);
     }
 
+    refresh();
 
     google.maps.event.addListener(map, 'bounds_changed', function(e) {
         updateMarkerStatus('Map changed');
         updateMarkerPosition(map.getBounds().getNorthEast());
 
-        refresh();
+        //refresh();
     });
 
     $('#add-marker').on('click', function(e) {
