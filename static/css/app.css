@@ -132,6 +132,10 @@ section.action-section {
   z-index: 20;
 }
 
+.action-add > section#main-details {
+  display: none;
+}
+
 .action-section header {
   text-align: center;
   height: 2rem;
