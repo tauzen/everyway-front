@@ -27,7 +27,7 @@ body {
   padding-left: 2rem;
 }
 
-button {
+button, .icon {
   border: none;
   width: 2rem;
   height: 2rem;
@@ -39,7 +39,7 @@ button {
   background-color: inherit;
 }
 
-.btn-big {
+.btn-big, .icon-big {
   width: 4rem;
   height: 4rem;
 }
@@ -64,40 +64,48 @@ button {
   background-image: url(../img/icon/awaria.png);
 }
 
-#btn-obs-nierownosci {
+.icon-obs-nierownosci {
   background-image: url(../img/icon/nierownosci.png);
 }
 
-#btn-obs-pochylosc {
+.icon-obs-pochylosc {
   background-image: url(../img/icon/pochylosc.png);
 }
 
-#btn-obs-prznad {
+.icon-obs-prznad {
   background-image: url(../img/icon/przejscienadziemne.png);
 }
 
-#btn-obs-schody {
+.icon-obs-schody {
   background-image: url(../img/icon/schody.png);
 }
 
-#btn-obs-kraweznik {
+.icon-obs-kraweznik {
   background-image: url(../img/icon/wysokikraweznik.png);
 }
 
-#btn-fac-poch {
+.icon-fac-poch {
   background-image: url(../img/icon/pochylnia.png);
 }
 
-#btn-fac-pod {
+.icon-fac-pod {
   background-image: url(../img/icon/podnosnik.png);
 }
 
-#btn-fac-kraw {
+.icon-fac-kraw {
   background-image: url(../img/icon/przyjaznykraweznik.png);
 }
 
-#btn-fac-winda {
+.icon-fac-winda {
   background-image: url(../img/icon/winda.png);
+}
+
+.icon-action-przeszkadzami {
+  background-image: url(../img/icon/przeszkadzmi.png)
+}
+
+.icon-action-awaria {
+  background-image: url(../img/icon/awaria.png);
 }
 
 section#main-map {
@@ -162,3 +170,44 @@ section.action-section {
   display: none;
 }
 
+div.col-xs-4, div.col-xs-12 {
+  text-align: center;
+}
+
+div.col-xs-4 > div{
+  display: inline-block;
+}
+
+#main-details .container {
+  margin-top: 1rem;
+}
+
+#main-details-category {
+  font-size: 1.2rem;
+}
+
+.error {
+  color: red;
+}
+
+#main-details-upvotes {
+  font-style: italic;
+}
+
+.main-details-actions {
+  margin-top: 1rem;
+  border-top: 0.2rem dotted #58bac3;
+  padding: 0.5rem;
+}
+
+.type-obstacle .awaria {
+  display: none;
+}
+
+.type-facility #main-details-upvotes {
+  display: none;
+}
+
+.type-facility .przeszkadzami {
+  display: none;
+}

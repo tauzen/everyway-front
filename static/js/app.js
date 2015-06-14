@@ -1,4 +1,24 @@
+'use strict';
+
+/* globals $, google */
+
+var CATEGORY_MAP = {
+  'facility': 'Udogodnienie',
+  'obstacle': 'Przeszkoda'
+};
+
+var KIND_MAP = {
+  'elevator': 'Winda',
+  'stairs': 'Schody'
+};
+
+var IMG_MAP = {
+  'elevator': 'icon-fac-winda',
+  'stairs': 'icon-obs-schody'
+};
+
 var stateTypeSelection = false;
+var currentMarker = { category: 'facility', kind: 'elevator', votes: 15 };
 
 var mainSection = $('#main');
 var addBtn = $('#main-button-add');
@@ -19,9 +39,27 @@ var backToTypeSelection = function() {
   mainAddSection.addClass('select-type');
 };
 
+var updateDetailsView = function(marker) {
+  $('#main-details-type').text(CATEGORY_MAP[marker.category]);
+  $('#main-details-category').text(KIND_MAP[marker.kind]);
+  $('#main-details-upvotes-count').text(marker.votes);
+
+  $('#main-details-img').removeClass();
+  $('#main-details-img').addClass('icon icon-big ' + IMG_MAP[marker.kind]);
+
+  if(marker.category === 'obstacle') {
+    $('#main-details').removeClass('type-facility');
+    $('#main-details').addClass('type-obstacle');
+  } else {
+    $('#main-details').removeClass('type-obstacle');
+    $('#main-details').addClass('type-facility');
+  }
+};
+
 var detailsClickHandler = function(event) {
   removeAction();
   mainSection.addClass('action action-details');
+  updateDetailsView(currentMarker);
 };
 
 addBtn.click(function() {
@@ -38,16 +76,46 @@ backBtn.click(function() {
   }
 });
 
-$('#main-add-type-select').click(function(event) {
+var getClickedElementType = function(prefix, event) {
   var sectionId = event.target.id;
-  if(!sectionId.startsWith('btn-type')) {
+  if(!sectionId.startsWith(prefix)) {
+    return null;
+  }
+
+  var elType = sectionId.replace(prefix, '');
+  return elType;
+};
+
+// type selection
+$('#main-add-type-select').click(function(event) {
+  var elType = getClickedElementType('btn-type-', event);
+  if(!elType) {
     return;
   }
 
-  var addClass = sectionId.replace('btn-type-','');
-  mainAddSection.addClass(addClass);
+  mainAddSection.addClass(elType);
   mainAddSection.removeClass('select-type');
   stateTypeSelection = true;
+});
+
+// add obstacle
+$('#main-add-obstacle').click(function(event) {
+  var elType = getClickedElementType('btn-obs-', event);
+  if(!elType) {
+    return;
+  }
+
+  console.log('clicked '  + elType);
+});
+
+//add facility
+$('#main-add-facility').click(function(event) {
+  var elType = getClickedElementType('btn-fac-', event);
+  if(!elType) {
+    return;
+  }
+
+  console.log('clicked ' + elType);
 });
 
 function init_map(){
