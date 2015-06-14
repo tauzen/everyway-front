@@ -72,13 +72,7 @@ function addMarkerToMap(markerOptions) {
     google.maps.event.addListener(marker, 'click', function(e) {
         currentMarker = marker;
 
-        var $md = $('#marker-details');
-
-        $md.children().remove();
-
-        for (var key in marker.customInfo) {
-            $md.append('<dt>' + key + '</dt><dd>' + marker.customInfo[key] + '</dd>');
-        }
+        UI.showDetails(marker.customInfo)
     });
 
     google.maps.event.addListener(marker, 'dragend', function() {
@@ -197,7 +191,7 @@ function refresh() {
 
 $(function() {
     var startCenter = new google.maps.LatLng(startLat, startLng);
-    map = new google.maps.Map(document.getElementById('mapCanvas'), {
+    map = new google.maps.Map(document.getElementById('main-map'), {
         zoom: 19,
         center: startCenter,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -244,18 +238,20 @@ $(function() {
 
     refresh();
 
-    $('#add-marker').on('click', function(e) {
-        e.preventDefault();
+    //$('#add-marker').on('click', function(e) {
+    //    e.preventDefault();
+    //
+    //    newMarker({
+    //        'category': 'qwe',
+    //        'kind': 'zxc'
+    //    })
+    //});
+    //
+    //$('#delete-marker').on('click', function(e) {
+    //    e.preventDefault();
+    //
+    //    deleteMarker(currentMarker);
+    //});
 
-        newMarker({
-            'category': 'qwe',
-            'kind': 'zxc'
-        })
-    });
-
-    $('#delete-marker').on('click', function(e) {
-        e.preventDefault();
-
-        deleteMarker(currentMarker);
-    });
+    UI.setAddMarkerHandler(newMarker)
 })
