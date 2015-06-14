@@ -18,6 +18,7 @@ var IMG_MAP = {
 };
 
 var stateTypeSelection = false;
+
 var currentMarker = { category: 'facility', kind: 'elevator', votes: 15 };
 
 var mainSection = $('#main');
@@ -105,7 +106,11 @@ $('#main-add-obstacle').click(function(event) {
     return;
   }
 
-  console.log('clicked '  + elType);
+  var marker = {
+    kind: $(event.target).data('markerKind'),
+    category: 'obstacle'
+  };
+   console.log(marker);
 });
 
 //add facility
@@ -115,7 +120,12 @@ $('#main-add-facility').click(function(event) {
     return;
   }
 
-  console.log('clicked ' + elType);
+  var marker = {
+    kind: $(event.target).data('markerKind'),
+    category: 'facility'
+  };
+
+  console.log(marker);
 });
 
 function init_map(){
