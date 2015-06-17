@@ -46,14 +46,17 @@ button, .icon {
 .btn-big, .icon-big {
   width: 4rem;
   height: 4rem;
+  background-color: white;
 }
 
 #main-button-back {
   background-image: url(../img/icon/back.png);
+  background-color: #58bac3;
 }
 
 #main-button-add {
   background-image: url(../img/icon/add.png);
+  background-color: #58bac3;
 }
 
 #btn-type-select-facility {
