@@ -12,9 +12,7 @@ body {
   background-color: #58bac3;
   color: white;
   border: none;
-  font-size: 1.5rem;
   height: 2rem;
-  line-height: 2rem;
   padding-top: 0.2rem;
 }
 
@@ -25,7 +23,7 @@ body {
 
 .main-title {
   background-image: url(../img/logo.png);
-  width: 200px;
+  width: 115px;
   height: 35px;
   background-size: contain;
   background-repeat: no-repeat;
