@@ -170,6 +170,17 @@ $(function() {
     }
 
     refresh();
+
     UI.setAddMarkerHandler(newMarker);
     UI.setDeleteMarkerHandler(deleteMarker);
+    UI.setUpvoteMarkerHandler(function(marker) {
+        marker.votes = (marker.votes) ? marker.votes + 1 : 1;
+        API.updateMarker(marker);
+        UI.showDetails(marker);
+    });
+    UI.setFailureMarkerHandler(function(marker) {
+        marker.state = 'failure';
+        API.updateMarker(marker);
+        UI.showDetails(marker);
+    });
 });

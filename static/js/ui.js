@@ -35,10 +35,34 @@
   };
 
   var stateTypeSelection = false;
+  var activeMarker = null;
 
   var mainSection = $('#main');
   var addBtn = $('#main-button-add');
   var backBtn = $('#main-button-back');
+
+  var upvoteBtn = $('#btn-action-przeszkadzami');
+  var failureBtn = $('#btn-action-awaria');
+  var deleteBtn = $('#btn-action-del');
+
+  upvoteBtn.click(function() {
+    if(activeMarker && upvoteMarkerHandler) {
+      upvoteMarkerHandler(activeMarker);
+    }
+  });
+
+  failureBtn.click(function() {
+    if(activeMarker && failureMarkerHandler) {
+      failureMarkerHandler(activeMarker);
+    }
+  });
+
+  deleteBtn.click(function() {
+    if(activeMarker && deleteMarkerHandler) {
+      deleteMarkerHandler(activeMarker);
+      removeAction();
+    }
+  });
 
   var mainAddSection = $('#main-add');
 
@@ -46,6 +70,7 @@
     mainSection.removeClass('action');
     mainSection.removeClass('action-add');
     mainSection.removeClass('action-details');
+    activeMarker = null;
   };
 
   var backToTypeSelection = function() {
@@ -70,23 +95,13 @@
       $('#main-details').removeClass('type-obstacle');
       $('#main-details').addClass('type-facility');
     }
-
-    // delete marker
-    var delBtn = $('#btn-action-del');
-    if(!delBtn) {
-      return;
-    }
-
-    delBtn.one('click', function() {
-      deleteMarkerHandler(marker);
-      removeAction();
-    });
   };
 
   var showDetails = function(marker) {
     removeAction();
     mainSection.addClass('action action-details');
     updateDetailsView(marker);
+    activeMarker = marker;
   };
 
   addBtn.click(function() {
@@ -174,10 +189,28 @@
     deleteMarkerHandler = cb;
   };
 
+  var upvoteMarkerHandler = function(marker) {
+    console.log('upvote marker', marker);
+  };
+
+  var setUpvoteMarkerHandler = function(cb) {
+    upvoteMarkerHandler = cb;
+  };
+
+  var failureMarkerHandler = function(marker) {
+    console.log('failure marker', marker);
+  };
+
+  var setFailureMarkerHandler = function(cb) {
+    failureMarkerHandler = cb;
+  };
+
   exports.UI = {
     showDetails: showDetails,
     setAddMarkerHandler: setAddMarkerHandler,
-    setDeleteMarkerHandler: setDeleteMarkerHandler 
+    setDeleteMarkerHandler: setDeleteMarkerHandler,
+    setUpvoteMarkerHandler: setUpvoteMarkerHandler,
+    setFailureMarkerHandler: setFailureMarkerHandler,
   };
 
 }((typeof exports === 'undefined') ? window : exports));
