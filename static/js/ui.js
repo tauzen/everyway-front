@@ -70,6 +70,17 @@
       $('#main-details').removeClass('type-obstacle');
       $('#main-details').addClass('type-facility');
     }
+
+    // delete marker
+    var delBtn = $('#btn-action-del');
+    if(!delBtn) {
+      return;
+    }
+
+    delBtn.one('click', function() {
+      deleteMarkerHandler(marker);
+      removeAction();
+    });
   };
 
   var showDetails = function(marker) {
@@ -114,14 +125,6 @@
     stateTypeSelection = true;
   });
 
-  var addMarkerHandler = function(marker) {
-    console.log(marker);
-  };
-
-  var setAddMarkerHandler = function(cb) {
-    addMarkerHandler = cb;
-  };
-
   // add obstacle
   $('#main-add-obstacle').click(function(event) {
     var elType = getClickedElementType('btn-obs-', event);
@@ -154,9 +157,27 @@
     removeAction();
   });
 
+  // handlers
+  var addMarkerHandler = function(marker) {
+    console.log('add marker', marker);
+  };
+
+  var setAddMarkerHandler = function(cb) {
+    addMarkerHandler = cb;
+  };
+
+  var deleteMarkerHandler = function(marker) {
+    console.log('delete marker', marker);
+  };
+
+  var setDeleteMarkerHandler = function(cb) {
+    deleteMarkerHandler = cb;
+  };
+
   exports.UI = {
     showDetails: showDetails,
-    setAddMarkerHandler: setAddMarkerHandler 
+    setAddMarkerHandler: setAddMarkerHandler,
+    setDeleteMarkerHandler: setDeleteMarkerHandler 
   };
 
 }((typeof exports === 'undefined') ? window : exports));

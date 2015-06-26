@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals google, $, UI, GeolocationMarker */
+/* globals google, $, UI, GeolocationMarker, API */
 
 /**
  * Created by ppaw on 2015-06-13.
@@ -86,12 +86,7 @@ function addMarkerToMap(markerOptions) {
 }
 
 function getMarkers(bounds) {
-    $.ajax({
-        url: 'http://everyway.herokuapp.com/marks.json',
-        success: function(data) {
-            addMarkersToMap(data);
-        }
-    });
+    API.getMarkers(bounds, addMarkersToMap.bind(this));
 }
 
 function addMarkersToMap(markersOptions) {
@@ -102,62 +97,13 @@ function addMarkersToMap(markersOptions) {
 
 function newMarker(markerOptions) {
     var defaultMarkerOptions = {
-        lat: startLat,
-        lng: startLng,
-        category: 'test',
-        kind: 'test',
+        lat: initialLocation.lat(),
+        lng: initialLocation.lng(),
         state: 'ok'
     };
 
     markerOptions = $.extend(defaultMarkerOptions, markerOptions);
-
-    var ajaxPost = function(marker) {
-        $.ajax({
-            url: 'http://everyway.herokuapp.com/marks',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(marker),
-            success: function() {
-                refresh();
-            },
-            error: function(e, textStatus, errorThrown) {
-                console.log(e);
-                console.log(textStatus);
-                console.log(errorThrown);
-            }
-        });
-    };
-
-    markerOptions = $.extend(markerOptions, {
-        lat: initialLocation.lat(),
-        lng: initialLocation.lng()
-    });
-    ajaxPost(markerOptions);
-
-    //if(navigator.geolocation) {
-    //    browserSupportFlag = true;
-    //    navigator.geolocation.getCurrentPosition(function(position) {
-    //        var latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-    //
-    //        markerOptions = $.extend(markerOptions, {
-    //            lat: String(latLng.lat()),
-    //            lng: String(latLng.lng())
-    //        });
-    //
-    //        ajaxPost(markerOptions);
-    //    }, function(error) {
-    //        console.error(error);
-    //    });
-    //} else {
-    //    var latLng = map.getCenter();
-    //
-    //    markerOptions = $.extend(markerOptions, {
-    //        lat: String(latLng.lat()),
-    //        lng: String(latLng.lng())
-    //    });
-    //
-    //    ajaxPost(markerOptions);
-    //}
+    API.addMarker(markerOptions, refresh.bind(this));
 }
 
 function updateMarker(marker) {
@@ -165,35 +111,12 @@ function updateMarker(marker) {
 
     m.lat = marker.getPosition().lat();
     m.lng = marker.getPosition().lng();
-
-    $.ajax({
-        url: 'http://everyway.herokuapp.com/marks/' + m.id,
-        method: 'PUT',
-        contentType: 'application/json',
-        data: JSON.stringify(m),
-        success: function() {
-            refresh();
-        },
-        error: function(e, textStatus, errorThrown) {
-            console.log(e);
-            console.log(textStatus);
-            console.log(errorThrown);
-        }
-    });
+    API.updateMarker(m, refresh.bind(this));
 }
 
 function deleteMarker(marker) {
-    var m = marker.customInfo;
-
-    $.ajax({
-        url: 'http://everyway.herokuapp.com/marks/' + m.id,
-        method: 'DELETE',
-        contentType: 'application/json',
-        data: JSON.stringify(m),
-        success: function() {
-            refresh();
-        }
-    });
+    var m = marker.customInfo || marker;
+    API.deleteMarker(m, refresh.bind(this));
 }
 
 function refresh() {
@@ -247,21 +170,6 @@ $(function() {
     }
 
     refresh();
-
-    //$('#add-marker').on('click', function(e) {
-    //    e.preventDefault();
-    //
-    //    newMarker({
-    //        'category': 'qwe',
-    //        'kind': 'zxc'
-    //    })
-    //});
-    //
-    //$('#delete-marker').on('click', function(e) {
-    //    e.preventDefault();
-    //
-    //    deleteMarker(currentMarker);
-    //});
-
     UI.setAddMarkerHandler(newMarker);
+    UI.setDeleteMarkerHandler(deleteMarker);
 });
