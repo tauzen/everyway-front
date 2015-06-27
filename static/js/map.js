@@ -1,26 +1,28 @@
 'use strict';
 
-/* globals google, $, UI, GeolocationMarker */
+/* globals google, $, GeolocationMarker */
 
 /**
  * Created by ppaw on 2015-06-13.
  */
-var geocoder = new google.maps.Geocoder();
 
-var startLat = 52.4023366862351;
-var startLng = 16.925666755676275;
+(function(exports) {
+  var geocoder = new google.maps.Geocoder();
 
-var initialLocation = null;
+  var startLat = 52.4023366862351;
+  var startLng = 16.925666755676275;
 
-var map;
-var markers = [];
-var browserSupportFlag = false;
+  var initialLocation = null;
 
-var follow = true;
+  var map;
+  var markers = [];
+  var browserSupportFlag = false;
 
-var markerIconPrefix = 'static/img/markers/';
+  var follow = true;
 
-var markerIconMap = {
+  var markerIconPrefix = 'static/img/markers/';
+
+  var markerIconMap = {
     "low-curb":"przyjaznykraweznik.png",
     "high-curb":"wysokikraweznik.png",
     "stairs":"schody.png",
@@ -30,238 +32,173 @@ var markerIconMap = {
     "foot-bridge":"przejscienadziemne.png",
     "ramp":"pochylnia.png",
     "slope":"pochylosc.png"
-};
+  };
 
-var currentMarker;
+  var currentMarker;
 
-// Sets the map on all markers in the array.
-function setAllMap(map) {
+  // Sets the map on all markers in the array.
+  function setAllMap(map) {
     for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(map);
+      markers[i].setMap(map);
     }
-}
+  }
 
-// Removes the markers from the map, but keeps them in the array.
-function clearMarkers() {
+  // Removes the markers from the map, but keeps them in the array.
+  function clearMarkers() {
     setAllMap(null);
-}
+  }
 
-// Shows any markers currently in the array.
-function showMarkers() {
-    setAllMap(map);
-}
-
-function addMarkerToMap(markerOptions) {
+  function addMarkerToMap(markerOptions, draggable) {
     var latLng = new google.maps.LatLng(markerOptions.lat, markerOptions.lng);
 
     var iconPath = null;
     var image = null;
     if (markerIconMap[markerOptions.kind]) {
-        iconPath = markerIconPrefix + markerIconMap[markerOptions.kind]
-        image = {
-            url: iconPath
-        };
+      iconPath = markerIconPrefix + markerIconMap[markerOptions.kind]
+      image = {
+          url: iconPath
+      };
     }
 
     var marker = new google.maps.Marker({
-        position: latLng,
-        title: markerOptions.kind,
-        map: map,
-        icon: image,
-        draggable: true,
-        customInfo: markerOptions
+      position: latLng,
+      title: markerOptions.kind,
+      map: map,
+      icon: image,
+      draggable: draggable,
+      animation: google.maps.Animation.DROP,
+      customInfo: markerOptions
     });
 
     markers.push(marker);
 
     google.maps.event.addListener(marker, 'click', function(e) {
-        currentMarker = marker;
-
-        UI.showDetails(marker.customInfo);
+      currentMarker = marker;
+      markerSelected(marker.customInfo);
+      map.panTo(marker.getPosition());
+      map.panBy(0, window.innerHeight / 4);
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function() {
+        marker.setAnimation(null);
+      }, 750);
     });
 
     google.maps.event.addListener(marker, 'dragend', function() {
-        updateMarker(marker);
+      updateMarker(marker);
     });
-}
 
-function getMarkers(bounds) {
-    $.ajax({
-        url: 'http://everyway.herokuapp.com/marks.json',
-        success: function(data) {
-            addMarkersToMap(data);
-        }
-    });
-}
+    return marker;
+  }
 
-function addMarkersToMap(markersOptions) {
+  function addMarkersToMap(markersOptions) {
     for (var i in markersOptions) {
-        addMarkerToMap(markersOptions[i]);
+      addMarkerToMap(markersOptions[i], false);
     }
-}
+  }
 
-function newMarker(markerOptions) {
+  function newMarker(markerOptions) {
     var defaultMarkerOptions = {
-        lat: startLat,
-        lng: startLng,
-        category: 'test',
-        kind: 'test',
-        state: 'ok'
+      lat: initialLocation.lat(),
+      lng: initialLocation.lng(),
+      state: 'ok'
     };
 
-    markerOptions = $.extend(defaultMarkerOptions, markerOptions);
+    var marker = $.extend(defaultMarkerOptions, markerOptions);
+    return addMarkerToMap(marker, true);
+  }
 
-    var ajaxPost = function(marker) {
-        $.ajax({
-            url: 'http://everyway.herokuapp.com/marks',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(marker),
-            success: function() {
-                refresh();
-            },
-            error: function(e, textStatus, errorThrown) {
-                console.log(e);
-                console.log(textStatus);
-                console.log(errorThrown);
-            }
-        });
-    };
-
-    markerOptions = $.extend(markerOptions, {
-        lat: initialLocation.lat(),
-        lng: initialLocation.lng()
-    });
-    ajaxPost(markerOptions);
-
-    //if(navigator.geolocation) {
-    //    browserSupportFlag = true;
-    //    navigator.geolocation.getCurrentPosition(function(position) {
-    //        var latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-    //
-    //        markerOptions = $.extend(markerOptions, {
-    //            lat: String(latLng.lat()),
-    //            lng: String(latLng.lng())
-    //        });
-    //
-    //        ajaxPost(markerOptions);
-    //    }, function(error) {
-    //        console.error(error);
-    //    });
-    //} else {
-    //    var latLng = map.getCenter();
-    //
-    //    markerOptions = $.extend(markerOptions, {
-    //        lat: String(latLng.lat()),
-    //        lng: String(latLng.lng())
-    //    });
-    //
-    //    ajaxPost(markerOptions);
-    //}
-}
-
-function updateMarker(marker) {
+  function updateMarker(marker) {
     var m = marker.customInfo;
 
     m.lat = marker.getPosition().lat();
     m.lng = marker.getPosition().lng();
+    markerMoved(m);
+  }
 
-    $.ajax({
-        url: 'http://everyway.herokuapp.com/marks/' + m.id,
-        method: 'PUT',
-        contentType: 'application/json',
-        data: JSON.stringify(m),
-        success: function() {
-            refresh();
-        },
-        error: function(e, textStatus, errorThrown) {
-            console.log(e);
-            console.log(textStatus);
-            console.log(errorThrown);
-        }
+  function deleteMarker(marker) {
+    var mapMarker = markers.find(function(m) {
+      return marker.id === m.customInfo.id;
     });
-}
 
-function deleteMarker(marker) {
-    var m = marker.customInfo;
+    if(mapMarker) {
+      mapMarker.setMap(null);
+    }
+  }
 
-    $.ajax({
-        url: 'http://everyway.herokuapp.com/marks/' + m.id,
-        method: 'DELETE',
-        contentType: 'application/json',
-        data: JSON.stringify(m),
-        success: function() {
-            refresh();
-        }
-    });
-}
-
-function refresh() {
+  function refresh(markers) {
     clearMarkers();
-    var m = getMarkers();
-    addMarkersToMap(m);
-}
+    addMarkersToMap(markers);
+  }
 
-$(function() {
+  function init() {
     initialLocation = new google.maps.LatLng(startLat, startLng);
     map = new google.maps.Map(document.getElementById('main-map'), {
-        zoom: 19,
-        center: initialLocation,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        disableDefaultUI: true,
-        zoomControl: true
+      zoom: 19,
+      center: initialLocation,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      disableDefaultUI: true,
+      zoomControl: true
     });
 
     var GeoMarker = new GeolocationMarker(map);
 
     GeoMarker.setCircleOptions({
-        visible: false
+      visible: false
     });
 
     GeoMarker.setMarkerOptions({
-        zIndex: 999
+      zIndex: 999
     });
 
     // Try W3C Geolocation (Preferred)
     if(navigator.geolocation) {
-        browserSupportFlag = true;
-        navigator.geolocation.getCurrentPosition(function(position) {
-            initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-            map.setCenter(initialLocation);
-        }, function() {
-            handleNoGeolocation(browserSupportFlag);
-        });
+      browserSupportFlag = true;
+      navigator.geolocation.getCurrentPosition(function(position) {
+        initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+        map.setCenter(initialLocation);
+      }, function() {
+        handleNoGeolocation(browserSupportFlag);
+      });
     }
     // Browser doesn't support Geolocation
     else {
-        browserSupportFlag = false;
-        handleNoGeolocation(browserSupportFlag);
+      browserSupportFlag = false;
+      handleNoGeolocation(browserSupportFlag);
     }
 
     function handleNoGeolocation(errorFlag) {
-        if (errorFlag === true) {
-            alert('Geolocation service failed.');
-        } else {
-            alert('Your browser doesn\'t support geolocation. We\'ve placed you in Siberia.');
-        }
+      if (errorFlag === true) {
+        alert('Geolocation service failed.');
+      } else {
+        alert('Your browser doesn\'t support geolocation. We\'ve placed you in Siberia.');
+      }
     }
+  }
 
-    refresh();
+  var markerMoved = function(marker) {
+    console.log('Marker moved', marker);
+  };
 
-    //$('#add-marker').on('click', function(e) {
-    //    e.preventDefault();
-    //
-    //    newMarker({
-    //        'category': 'qwe',
-    //        'kind': 'zxc'
-    //    })
-    //});
-    //
-    //$('#delete-marker').on('click', function(e) {
-    //    e.preventDefault();
-    //
-    //    deleteMarker(currentMarker);
-    //});
+  var setMarkerMovedHandler = function(cb) {
+    markerMoved = cb;
+  };
 
-    UI.setAddMarkerHandler(newMarker);
-});
+  var markerSelected = function(marker) {
+    console.log('Marker selected', marker);
+  };
+
+  var setMarkerSelectedHandler = function(cb) {
+    markerSelected = cb;
+  };
+
+  exports.Map = {
+    init: init,
+    drawMarkers: refresh,
+    createMarker: newMarker,
+    removeMarker: deleteMarker,
+    redrawMarker: function(m) { console.log('TODO redraw', m); },
+    setMarkerMovedHandler: setMarkerMovedHandler,
+    setMarkerSelectedHandler: setMarkerSelectedHandler,
+  };
+
+})((typeof exports === 'undefined') ? window : exports);

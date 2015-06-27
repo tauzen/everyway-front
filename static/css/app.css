@@ -222,3 +222,7 @@ div.col-xs-4 > div{
 .type-facility .przeszkadzami {
   display: none;
 }
+
+.hide {
+  display: none;
+}

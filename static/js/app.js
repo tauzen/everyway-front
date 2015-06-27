@@ -1,162 +1,64 @@
 'use strict';
 
-/* globals $, google */
-/* exported UI */
+/* global UI, API, Map */
 
-(function(exports) {
+// Markers are currently stored in an array in Map module
+// and the data retrieved from API calls is stored in customInfo
+// property of each marker. Once a marker is clicked, customInfo property is
+// passed into the UI and stored. UI actions handlers are implemented below,
+// they revceive the customInfo object as parameter and can modify it
+// here if needed and notify any changes to the API or MAP objects.
 
-  var CATEGORY_MAP = {
-    'facility': 'Udogodnienie',
-    'obstacle': 'Przeszkoda'
-  };
+window.addEventListener('DOMContentLoaded', function() {
+  if(localStorage.getItem('debug') === 'enabled') {
+    UI.enableDebug();
+  }
 
-  var KIND_MAP = {
-    'elevator': 'Winda',
-    'stairs': 'Schody',
-    'low-curb': 'Przyjazny krawężnik',
-    'high-curb': 'Wysoki krawężnik',
-    'elevator-platform': 'Podnośnik',
-    'cobbles': 'Nierówności',
-    'foot-bridge':'Przejście nadziemne',
-    'ramp':'Pochylnia',
-    'slope':'Duża pochyłość'
-  };
-
-  var IMG_MAP = {
-    'elevator': 'icon-fac-winda',
-    'stairs': 'icon-obs-schody',
-    'low-curb': 'icon-fac-kraw',
-    'high-curb': 'icon-obs-kraweznik',
-    'elevator-platform': 'icon-fac-pod',
-    'cobbles': 'icon-obs-nierownosci',
-    'foot-bridge':'icon-obs-prznad',
-    'ramp':'icon-fac-poch',
-    'slope':'icon-obs-pochylosc'
-  };
-
-  var stateTypeSelection = false;
-
-  var mainSection = $('#main');
-  var addBtn = $('#main-button-add');
-  var backBtn = $('#main-button-back');
-
-  var mainAddSection = $('#main-add');
-
-  var removeAction = function() {
-    mainSection.removeClass('action');
-    mainSection.removeClass('action-add');
-    mainSection.removeClass('action-details');
-  };
-
-  var backToTypeSelection = function() {
-    mainAddSection.removeClass('select-facility');
-    mainAddSection.removeClass('select-obstacle');
-    mainAddSection.removeClass('select-failure');
-    mainAddSection.addClass('select-type');
-  };
-
-  var updateDetailsView = function(marker) {
-    $('#main-details-type').text(CATEGORY_MAP[marker.category]);
-    $('#main-details-category').text(KIND_MAP[marker.kind]);
-    $('#main-details-upvotes-count').text(marker.votes);
-
-    $('#main-details-img').removeClass();
-    $('#main-details-img').addClass('icon icon-big ' + IMG_MAP[marker.kind]);
-
-    if(marker.category === 'obstacle') {
-      $('#main-details').removeClass('type-facility');
-      $('#main-details').addClass('type-obstacle');
-    } else {
-      $('#main-details').removeClass('type-obstacle');
-      $('#main-details').addClass('type-facility');
-    }
-  };
-
-  var showDetails = function(marker) {
-    removeAction();
-    mainSection.addClass('action action-details');
-    updateDetailsView(marker);
-  };
-
-  addBtn.click(function() {
-    removeAction();
-    mainSection.addClass('action action-add');
-  }); 
-
-  backBtn.click(function() {
-    if(stateTypeSelection) {
-      stateTypeSelection = false;
-      backToTypeSelection();
-    } else {
-      removeAction();
-    }
+  Map.init();
+  API.getMarkers(null, function(markers) {
+    Map.drawMarkers(markers);
   });
 
-  var getClickedElementType = function(prefix, event) {
-    var sectionId = event.target.id;
-    if(!sectionId.startsWith(prefix)) {
-      return null;
-    }
-
-    var elType = sectionId.replace(prefix, '');
-    return elType;
+  var addMarker = function(markerOptions) {
+    var marker = Map.createMarker(markerOptions);
+    API.addMarker(marker.customInfo, function(savedMarker) {
+      marker.customInfo.id = savedMarker.id;
+    });
   };
 
-  // type selection
-  $('#main-add-type-select').click(function(event) {
-    var elType = getClickedElementType('btn-type-', event);
-    if(!elType) {
-      return;
-    }
-
-    mainAddSection.addClass(elType);
-    mainAddSection.removeClass('select-type');
-    stateTypeSelection = true;
-  });
-
-  var addMarkerHandler = function(marker) {
-    console.log(marker);
+  var deleteMarker = function(marker) {
+    API.deleteMarker(marker, function() {
+      Map.removeMarker(marker);
+    });
   };
 
-  var setAddMarkerHandler = function(cb) {
-    addMarkerHandler = cb;
+  var upvoteMarker = function(marker) {
+    marker.votes = (marker.votes) ? marker.votes + 1 : 1;
+    API.updateMarker(marker);
+    UI.showDetails(marker);
   };
 
-  // add obstacle
-  $('#main-add-obstacle').click(function(event) {
-    var elType = getClickedElementType('btn-obs-', event);
-    if(!elType) {
-      return;
-    }
-
-    var marker = {
-      kind: $(event.target).data('markerKind'),
-      category: 'obstacle'
-    };
-    
-    addMarkerHandler(marker);
-    removeAction();
-  });
-
-  //add facility
-  $('#main-add-facility').click(function(event) {
-    var elType = getClickedElementType('btn-fac-', event);
-    if(!elType) {
-      return;
-    }
-
-    var marker = {
-      kind: $(event.target).data('markerKind'),
-      category: 'facility'
-    };
-
-    addMarkerHandler(marker);
-    removeAction();
-  });
-
-  exports.UI = {
-    showDetails: showDetails,
-    setAddMarkerHandler: setAddMarkerHandler 
+  var markerFailure = function(marker) {
+    marker.state = 'failure';
+    API.updateMarker(marker, function() {
+      UI.showDetails(marker);
+      Map.redrawMarker(marker);
+    });
   };
 
-}((typeof exports === 'undefined') ? window : exports));
+  UI.setAddMarkerHandler(addMarker.bind(this));
+  UI.setDeleteMarkerHandler(deleteMarker.bind(this));
+  UI.setUpvoteMarkerHandler(upvoteMarker.bind(this));
+  UI.setFailureMarkerHandler(markerFailure.bind(this));
+
+  var markerMoved = function(marker) {
+    API.updateMarker(marker);
+  };
+
+  var markerSelected = function(marker) {
+    UI.showDetails(marker);
+  };
+
+  Map.setMarkerMovedHandler(markerMoved.bind(this));
+  Map.setMarkerSelectedHandler(markerSelected.bind(this));
+});
