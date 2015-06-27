@@ -119,8 +119,13 @@
   }
 
   function deleteMarker(marker) {
-    var m = marker.customInfo || marker;
-    API.deleteMarker(m, refresh.bind(this));
+    var mapMarker = markers.find(function(m) {
+      return marker.id === m.customInfo.id;
+    });
+
+    if(mapMarker) {
+      mapMarker.setMap(null);
+    }
   }
 
   function refresh(markers) {
@@ -172,24 +177,14 @@
         alert('Your browser doesn\'t support geolocation. We\'ve placed you in Siberia.');
       }
     }
-
-    UI.setDeleteMarkerHandler(deleteMarker);
-    UI.setUpvoteMarkerHandler(function(marker) {
-      marker.votes = (marker.votes) ? marker.votes + 1 : 1;
-      API.updateMarker(marker);
-      UI.showDetails(marker);
-    });
-    UI.setFailureMarkerHandler(function(marker) {
-      marker.state = 'failure';
-      API.updateMarker(marker);
-      UI.showDetails(marker);
-    });
   }
 
   exports.Map = {
     init: init,
     drawMarkers: refresh,
     createMarker: newMarker,
+    removeMarker: deleteMarker,
+    redrawMarker: function(m) { console.log('TODO redraw', m); }
   };
 
 })((typeof exports === 'undefined') ? window : exports);
