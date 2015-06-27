@@ -205,12 +205,17 @@
     failureMarkerHandler = cb;
   };
 
+  var enableDebug = function() {
+    deleteBtn.removeClass('hide');
+  };
+
   exports.UI = {
     showDetails: showDetails,
     setAddMarkerHandler: setAddMarkerHandler,
     setDeleteMarkerHandler: setDeleteMarkerHandler,
     setUpvoteMarkerHandler: setUpvoteMarkerHandler,
     setFailureMarkerHandler: setFailureMarkerHandler,
+    enableDebug: enableDebug
   };
 
 }((typeof exports === 'undefined') ? window : exports));
