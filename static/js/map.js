@@ -48,11 +48,6 @@
     setAllMap(null);
   }
 
-  // Shows any markers currently in the array.
-  function showMarkers() {
-    setAllMap(map);
-  }
-
   function addMarkerToMap(markerOptions, draggable) {
     var latLng = new google.maps.LatLng(markerOptions.lat, markerOptions.lng);
 
@@ -70,7 +65,8 @@
       title: markerOptions.kind,
       map: map,
       icon: image,
-      draggable: true,
+      draggable: draggable,
+      animation: google.maps.Animation.DROP,
       customInfo: markerOptions
     });
 
@@ -79,6 +75,12 @@
     google.maps.event.addListener(marker, 'click', function(e) {
       currentMarker = marker;
       markerSelected(marker.customInfo);
+      map.panTo(marker.getPosition());
+      map.panBy(0, window.innerHeight / 4);
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function() {
+        marker.setAnimation(null);
+      }, 750);
     });
 
     google.maps.event.addListener(marker, 'dragend', function() {
@@ -90,7 +92,7 @@
 
   function addMarkersToMap(markersOptions) {
     for (var i in markersOptions) {
-      addMarkerToMap(markersOptions[i]);
+      addMarkerToMap(markersOptions[i], false);
     }
   }
 
@@ -102,7 +104,7 @@
     };
 
     var marker = $.extend(defaultMarkerOptions, markerOptions);
-    return addMarkerToMap(marker);
+    return addMarkerToMap(marker, true);
   }
 
   function updateMarker(marker) {
