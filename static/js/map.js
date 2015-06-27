@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals google, $, UI, GeolocationMarker, API */
+/* globals google, $, GeolocationMarker */
 
 /**
  * Created by ppaw on 2015-06-13.
@@ -78,8 +78,7 @@
 
     google.maps.event.addListener(marker, 'click', function(e) {
       currentMarker = marker;
-
-      UI.showDetails(marker.customInfo);
+      markerSelected(marker.customInfo);
     });
 
     google.maps.event.addListener(marker, 'dragend', function() {
@@ -87,10 +86,6 @@
     });
 
     return marker;
-  }
-
-  function getMarkers(bounds) {
-    API.getMarkers(bounds, addMarkersToMap.bind(this));
   }
 
   function addMarkersToMap(markersOptions) {
@@ -115,7 +110,7 @@
 
     m.lat = marker.getPosition().lat();
     m.lng = marker.getPosition().lng();
-    API.updateMarker(m, refresh.bind(this));
+    markerMoved(m);
   }
 
   function deleteMarker(marker) {
@@ -130,8 +125,7 @@
 
   function refresh(markers) {
     clearMarkers();
-    var m = markers || getMarkers();
-    addMarkersToMap(m);
+    addMarkersToMap(markers);
   }
 
   function init() {
@@ -179,12 +173,30 @@
     }
   }
 
+  var markerMoved = function(marker) {
+    console.log('Marker moved', marker);
+  };
+
+  var setMarkerMovedHandler = function(cb) {
+    markerMoved = cb;
+  };
+
+  var markerSelected = function(marker) {
+    console.log('Marker selected', marker);
+  };
+
+  var setMarkerSelectedHandler = function(cb) {
+    markerSelected = cb;
+  };
+
   exports.Map = {
     init: init,
     drawMarkers: refresh,
     createMarker: newMarker,
     removeMarker: deleteMarker,
-    redrawMarker: function(m) { console.log('TODO redraw', m); }
+    redrawMarker: function(m) { console.log('TODO redraw', m); },
+    setMarkerMovedHandler: setMarkerMovedHandler,
+    setMarkerSelectedHandler: setMarkerSelectedHandler,
   };
 
 })((typeof exports === 'undefined') ? window : exports);

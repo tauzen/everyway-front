@@ -50,4 +50,15 @@ window.addEventListener('DOMContentLoaded', function() {
   UI.setDeleteMarkerHandler(deleteMarker.bind(this));
   UI.setUpvoteMarkerHandler(upvoteMarker.bind(this));
   UI.setFailureMarkerHandler(markerFailure.bind(this));
+
+  var markerMoved = function(marker) {
+    API.updateMarker(marker);
+  };
+
+  var markerSelected = function(marker) {
+    UI.showDetails(marker);
+  };
+
+  Map.setMarkerMovedHandler(markerMoved.bind(this));
+  Map.setMarkerSelectedHandler(markerSelected.bind(this));
 });
