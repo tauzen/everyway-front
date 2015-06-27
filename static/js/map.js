@@ -75,6 +75,7 @@
     google.maps.event.addListener(marker, 'click', function(e) {
       currentMarker = marker;
       markerSelected(marker.customInfo);
+      map.setZoom(19);
       map.panTo(marker.getPosition());
       map.panBy(0, window.innerHeight / 4);
       marker.setAnimation(google.maps.Animation.BOUNCE);
