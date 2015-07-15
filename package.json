@@ -1,0 +1,25 @@
+{
+  "name": "everyway-frontend",
+  "version": "0.5.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "start": "node_modules/live-server/live-server.js --no-browser",
+    "test": "node_modules/nightwatch/bin/nightwatch",
+    "selenium": "java -jar bin/selenium-server-standalone-2.46.0.jar"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tauzen/everyway-front.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tauzen/everyway-front/issues"
+  },
+  "homepage": "https://github.com/tauzen/everyway-front#readme",
+  "devDependencies": {
+    "live-server": "^0.7.1",
+    "nightwatch": "^0.7.6"
+  }
+}
