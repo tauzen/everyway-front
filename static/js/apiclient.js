@@ -1,9 +1,9 @@
 'use strict';
 
-/* global $ */
+/* global $, CONFIG */
 
 (function(exports) {
-  var SERVER_URL = 'http://localhost:3000';
+  var SERVER_URL = CONFIG.API_URL;
 
   var _creatSuccessCB = function(callback) {
     return function(data) {
