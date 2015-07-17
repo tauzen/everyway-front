@@ -1,7 +1,7 @@
 'use strict';
 
 (function(exports) {
-  var DEVELOPMENT = true;
+  var DEVELOPMENT = false;
 
   if(DEVELOPMENT) {
     localStorage.setItem('debug', 'enabled');
