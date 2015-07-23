@@ -1,6 +1,6 @@
 'use strict';
 
-/* global UI, API, Map */
+/* global UI, API, Map, FbUser */
 
 // Markers are currently stored in an array in Map module
 // and the data retrieved from API calls is stored in customInfo
@@ -13,11 +13,6 @@ window.addEventListener('DOMContentLoaded', function() {
   if(localStorage.getItem('debug') === 'enabled') {
     UI.enableDebug();
   }
-
-  Map.init();
-  API.getMarkers(null, function(markers) {
-    Map.drawMarkers(markers);
-  });
 
   var addMarker = function(markerOptions) {
     var marker = Map.createMarker(markerOptions);
@@ -46,10 +41,31 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   };
 
-  UI.setAddMarkerHandler(addMarker.bind(this));
-  UI.setDeleteMarkerHandler(deleteMarker.bind(this));
-  UI.setUpvoteMarkerHandler(upvoteMarker.bind(this));
-  UI.setFailureMarkerHandler(markerFailure.bind(this));
+  var onFbLogin = function(user) {
+    if(user.userID) {
+      UI.userLoggedIn();
+      API.updateAuthToken(user.authToken);
+    }
+  };
+
+  var fbLoginRequested = function() {
+    FbUser.checkLoginStatus(function(user) {
+      if(user.userID) {
+        onFbLogin(user);
+        return;
+      }
+
+      FbUser.loginUser(function(_user) {
+        onFbLogin(_user);
+      });
+    });
+  };
+
+  UI.setAddMarkerHandler(addMarker);
+  UI.setDeleteMarkerHandler(deleteMarker);
+  UI.setUpvoteMarkerHandler(upvoteMarker);
+  UI.setFailureMarkerHandler(markerFailure);
+  UI.setFbLoginRequestHandler(fbLoginRequested);
 
   var markerMoved = function(marker) {
     API.updateMarker(marker);
@@ -59,6 +75,12 @@ window.addEventListener('DOMContentLoaded', function() {
     UI.showDetails(marker);
   };
 
-  Map.setMarkerMovedHandler(markerMoved.bind(this));
-  Map.setMarkerSelectedHandler(markerSelected.bind(this));
+  Map.setMarkerMovedHandler(markerMoved);
+  Map.setMarkerSelectedHandler(markerSelected);
+
+  Map.init();
+  API.getMarkers(null, function(markers) {
+    Map.drawMarkers(markers);
+  });
+
 });

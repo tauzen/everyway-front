@@ -36,6 +36,7 @@
 
   var stateTypeSelection = false;
   var activeMarker = null;
+  var loggedInView = false;
 
   var mainSection = $('#main');
   var addBtn = $('#main-button-add');
@@ -104,10 +105,17 @@
     activeMarker = marker;
   };
 
-  addBtn.click(function() {
+  var openAddView = function() {
     removeAction();
-    mainSection.addClass('action action-add');
-  }); 
+
+    if(loggedInView) {
+      mainSection.addClass('action action-add');
+    } else {
+      fbLoginRequestHandler();
+    }
+  };
+
+  addBtn.click(openAddView);
 
   backBtn.click(function() {
     if(stateTypeSelection) {
@@ -209,12 +217,32 @@
     deleteBtn.removeClass('hide');
   };
 
+  var fbLoginRequestHandler = function() {
+    console.log('FB login requested');
+  };
+
+  var setFbLoginRequestHandler = function(cb) {
+    fbLoginRequestHandler = cb;
+  };
+
+  var userLoggedIn = function() {
+    loggedInView = true;
+    openAddView();
+  };
+
+  var userLoggedOut = function() {
+    loggedInView = false;
+  };
+
   exports.UI = {
     showDetails: showDetails,
     setAddMarkerHandler: setAddMarkerHandler,
     setDeleteMarkerHandler: setDeleteMarkerHandler,
     setUpvoteMarkerHandler: setUpvoteMarkerHandler,
     setFailureMarkerHandler: setFailureMarkerHandler,
+    setFbLoginRequestHandler: setFbLoginRequestHandler,
+    userLoggedIn: userLoggedIn,
+    userLoggedOut: userLoggedOut,
     enableDebug: enableDebug
   };
 

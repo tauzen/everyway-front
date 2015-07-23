@@ -4,6 +4,7 @@
 
 (function(exports) {
   var SERVER_URL = CONFIG.API_URL;
+  var authToken = '';
 
   var _creatSuccessCB = function(callback) {
     return function(data) {
@@ -33,7 +34,8 @@
     $.ajax(SERVER_URL + '/marks', {
       method: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify(marker)
+      data: JSON.stringify(marker),
+      headers: { 'easy-authorization-token': authToken }
     })
     .done(_creatSuccessCB(success))
     .fail(_createErrorCB(error));
@@ -43,7 +45,8 @@
     $.ajax(SERVER_URL + '/marks/' + marker.id, {
       method: 'PUT',
       contentType: 'application/json',
-      data: JSON.stringify(marker)
+      data: JSON.stringify(marker),
+      headers: { 'easy-authorization-token': authToken }
     })
     .done(_creatSuccessCB(success))
     .fail(_createErrorCB(error));
@@ -53,17 +56,23 @@
     $.ajax(SERVER_URL + '/marks/' + marker.id, {
       method: 'DELETE',
       contentType: 'application/json',
-      data: JSON.stringify(marker)
+      data: JSON.stringify(marker),
+      headers: { 'easy-authorization-token': authToken }
     })
     .done(_creatSuccessCB(success))
     .fail(_createErrorCB(error));
+  };
+
+  var updateAuthToken = function updateAuthToken(token) {
+    authToken = token;
   };
 
   exports.API = {
     getMarkers: getMarkers,
     addMarker: addMarker,
     updateMarker: updateMarker,
-    deleteMarker: deleteMarker
+    deleteMarker: deleteMarker,
+    updateAuthToken: updateAuthToken,
   };
 
 })((typeof exports === 'undefined') ? window : exports);
