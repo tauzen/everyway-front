@@ -10,4 +10,4 @@ var Main = React.createClass({
   }
 });
 
-React.render(<Main />, document.getElementById('easy-city-app'));
+/*React.render(<Main />, document.getElementById('easy-city-app'));*/

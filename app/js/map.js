@@ -1,10 +1,14 @@
 'use strict';
 
-/* globals google, $, GeolocationMarker */
+/* globals google, GeolocationMarker */
 
 /**
  * Created by ppaw on 2015-06-13.
  */
+
+var $ = require('jquery');
+// GeolocationMarker import
+require('../../bower_components/geolocation-marker/dist/geolocationmarker-compiled.js');
 
 (function(exports) {
   var geocoder = new google.maps.Geocoder();

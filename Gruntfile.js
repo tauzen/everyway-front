@@ -25,7 +25,7 @@ module.exports = function(grunt) {
           }
         },
         src: 'app/js/**/*.js',
-        dest: 'static/js/bundle.js'
+        dest: 'static/js/bundle-debug.js'
       },
       production: {
         options: {
