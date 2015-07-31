@@ -8,12 +8,17 @@
 // here if needed and notify any changes to the API or MAP objects.
 
 require('babelify/polyfill');
+
+var ReactUI = require('./components/main-ui.react');
+ReactUI.renderUI('easy-city-app');
+
 var API = require('./apiclient.js').API;
 var UI = require('./ui').UI;
 var GMap = require('./map').Map;
 var FbUser = require('./fblogin').FbUser;
 
 window.addEventListener('DOMContentLoaded', function() {
+
   if(localStorage.getItem('debug') === 'enabled') {
     UI.enableDebug();
   }
