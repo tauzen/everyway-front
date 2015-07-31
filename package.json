@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node_modules/live-server/live-server.js --no-browser",
     "test": "node_modules/nightwatch/bin/nightwatch",
-    "selenium": "java -jar bin/selenium-server-standalone-2.46.0.jar"
+    "selenium": "java -jar bin/selenium-server-standalone-2.46.0.jar",
+    "build": "node_modules/grunt-cli/bin/grunt dist",
+    "build-ci": "node_modules/bower/bin/bower install && node_modules/grunt-cli/bin/grunt ci-build"
   },
   "repository": {
     "type": "git",
@@ -19,7 +21,24 @@
   },
   "homepage": "https://github.com/tauzen/everyway-front#readme",
   "devDependencies": {
+    "babel-core": "^5.8.19",
+    "babel-eslint": "^4.0.5",
+    "babelify": "^6.1.3",
+    "bower": "^1.4.1",
+    "debowerify": "^1.3.1",
+    "eslint": "^0.24.1",
+    "eslint-plugin-react": "^3.1.0",
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^3.8.0",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-less": "^1.0.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "jit-grunt": "^0.9.1",
     "live-server": "^0.7.1",
-    "nightwatch": "^0.7.6"
+    "nightwatch": "^0.7.6",
+    "uglifyify": "^3.0.1"
+  },
+  "dependencies": {
+    "react": "^0.13.3"
   }
 }

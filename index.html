@@ -6,11 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>EasyCity</title>
-
-    <!-- Bootstrap -->
-    <link href="static/css/bootstrap.css" rel="stylesheet">
-    <link href="static/css/lato-font.css" rel="stylesheet">
-    <link href="static/css/app.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -20,147 +16,8 @@
     <![endif]-->
   </head>
   <body>
-    <section id="welcome"></section>
-    <section id="categories"></section>
-    <section id="main">
-      <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-          <div class="pull-left">
-            <button id="main-button-back"></button>
-          </div>
-          <div class="pull-left main-title"></div>
-          <div class="pull-right">
-            <button id="main-button-add"></button>
-          </div>
-        </div>
-      </nav>
-      <section id="main-map"></section>
-      <section id="main-add" class="action-section select-type">
-        <header>
-          Dodaj punkt
-        </header>
-        <section id="main-add-type-select">
-          <div class="container type-select">
-            <div class="row">
-              <div class="col-xs-6">
-                <button id="btn-type-select-facility" class="btn-big" data-marker-category="facility"></button>
-                <p>udogodnienie</p>
-              </div>
-              <div class="col-xs-6">
-                <button id="btn-type-select-obstacle" class="btn-big" data-marker-category="obstacle">
-                </button>
-                <p>przeszkoda</p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section id="main-add-obstacle">
-          <div class="container type-select">
-            <div class="row">
-              <div class="col-xs-4">
-                <button id="btn-obs-nierownosci" class="icon-obs-nierownosci btn-big" data-marker-kind="cobbles"></button>
-                <p>nierówności</p>
-              </div>
-              <div class="col-xs-4">
-                <button id="btn-obs-prznad" class="icon-obs-prznad btn-big" data-marker-kind="foot-bridge">
-                </button>
-                <p>przejście nadziemne</p>
-              </div>
-              <div class="col-xs-4">
-                <button id="btn-obs-pochylosc" class="icon-obs-pochylosc btn-big" data-marker-kind="slope">
-                </button>
-                <p>pochyłość</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-4">
-                <button id="btn-obs-schody" class="icon-obs-schody btn-big" data-marker-kind="stairs"></button>
-                <p>schody</p>
-              </div>
-              <div class="col-xs-4">
-                <button id="btn-obs-kraweznik" class="icon-obs-kraweznik btn-big" data-marker-kind="high-curb">
-                </button>
-                <p>wysoki krawężnik</p>
-              </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section id="main-add-facility">
-          <div class="container type-select">
-            <div class="row">
-              <div class="col-xs-4">
-                <button id="btn-fac-poch" class="icon-fac-poch btn-big" data-marker-kind="ramp"></button>
-                <p>pochylnia</p>
-              </div>
-              <div class="col-xs-4">
-                <button id="btn-fac-pod" class="icon-fac-pod btn-big" data-marker-kind="elevator-platform">
-                </button>
-                <p>podnośnik</p>
-              </div>
-              <div class="col-xs-4">
-                <button id="btn-fac-kraw" class="icon-fac-kraw btn-big" data-marker-kind="low-curb">
-                </button>
-                <p>przyjazny krawężnik</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-4">
-                <button id="btn-fac-winda" class="icon-fac-winda btn-big" data-marker-kind="elevator"></button>
-                <p>winda</p>
-              </div>
-            </div>
-          </div>
-        </section>
-      </section>
-      <section id="main-details" class="action-section type-obstacle">
-        <header id="main-details-type">
-          Punkt
-        </header>
-        <div class="container">
-          <div class="row">
-            <div class="col-xs-4">
-              <div id="main-details-img" class="icon icon-big icon-obs-schody">
-              </div>
-            </div>
-            <div class="col-xs-8">
-              <p id="main-details-category">Schody</p>
-              <p id="main-details-upvotes">
-                <span class="error"><span id="main-details-upvotes-count">10</span> osobom</span> to przeszkadza
-              </p>
-            </div>
-          </div>
-          <div class="row main-details-actions">
-            <div class="col-xs-12">
-              <button id="btn-action-przeszkadzami" class="icon-action-przeszkadzami btn-big przeszkadzami"></button>
-              <p class="przeszkadzami">Przeszkadza mi to!</p>
-              <button id="btn-action-awaria" class="awaria icon-action-awaria btn-big"></button>
-              <p class="awaria">Awaria!</p>
-              <button id="btn-action-del" class="btn-big hide">Usuń</button>
-            </div>
-          </div>
-        </div>
-      </section>
-    </section>
-    <script src="static/js/config.js"></script>
-    <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
-    <script src="static/js/fblogin.js"></script>
-    <script src="static/js/libs/jquery.js"></script>
-    <script src="static/js/libs/bootstrap.js"></script>
-    <script src="static/js/libs/geolocationmarker-compiled.js"></script>
-    <script src="static/js/polyfills.js"></script>
-    <script src="static/js/apiclient.js"></script>
-    <script src="static/js/ui.js"></script>
-    <script src="static/js/map.js"></script>
-    <script src="static/js/app.js"></script>
-    <!-- Google Tag Manager -->
-    <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-NG48BL"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-NG48BL');</script>
-    <!-- End Google Tag Manager -->
+    <div id="easy-city-app"></div>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="static/js/bundle-debug.js"></script>
   </body>
 </html>
