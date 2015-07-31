@@ -15,8 +15,8 @@
   "dependencies": {
     "bootstrap": "~3.3.5",
     "jquery": "~2.1.4",
-    "hammer.js": "~2.0.4",
-    "lato-font": "~1.1.1"
+    "lato-font": "~1.1.1",
+    "geolocation-marker": "*"
   },
   "devDependencies": {
     "jquery": "~2.1.4"

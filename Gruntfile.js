@@ -50,5 +50,6 @@ module.exports = function(grunt) {
     }
   });
   grunt.registerTask('default', ['less', 'browserify:dev', 'watch']);
+  grunt.registerTask('ci-build', ['less', 'browserify:dev']);
   grunt.registerTask('dist', ['less', 'browserify:production']);
 };
