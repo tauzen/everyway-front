@@ -37,8 +37,5 @@
     "live-server": "^0.7.1",
     "nightwatch": "^0.7.6",
     "uglifyify": "^3.0.1"
-  },
-  "dependencies": {
-    "react": "^0.13.3"
   }
 }

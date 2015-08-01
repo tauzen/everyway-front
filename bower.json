@@ -16,7 +16,9 @@
     "bootstrap": "~3.3.5",
     "jquery": "~2.1.4",
     "lato-font": "~1.1.1",
-    "geolocation-marker": "*"
+    "geolocation-marker": "*",
+    "react": "~0.13.3",
+    "react-router": "~0.13.3"
   },
   "devDependencies": {
     "jquery": "~2.1.4"

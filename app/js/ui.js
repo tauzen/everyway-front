@@ -112,7 +112,7 @@ var openAddView = function() {
   }
 };
 
-addBtn.click(openAddView);
+//addBtn.click(openAddView);
 
 backBtn.click(function() {
   if(stateTypeSelection) {

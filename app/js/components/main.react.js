@@ -1,29 +1,36 @@
 'use strict';
 
 var React = require('react');
+var Router = require('react-router');
+
 var Header = require('./header.react');
 var MapComponent = require('./map/map.react');
-var AddPoint = require('./point/add.react');
-var PointDetails = require('./point/details.react');
+
+var RouteHandler = Router.RouteHandler;
 
 var Main = React.createClass({
+  mixins: [Router.State, Router.Navigation],
+  addPoint: function() {
+    this.transitionTo('category-choice');
+  },
   render: function() {
+    var small = this.getPath() !== '/';
     return (
     <section id="main">
-      <Header />
-      <MapComponent />
-      <AddPoint />
-      <PointDetails />
+      <Header addPoint={this.addPoint} goBack={this.goBack} />
+      <MapComponent small={small}/>
+      <RouteHandler />
     </section>
     );
   }
 });
 
-module.exports = {
+module.exports = Main;
+
+/*{
   renderUI: function(id) {
     var element = id ? document.getElementById(id) :
                        document.body;
     React.render(<Main />, element);
   }
-};
-
+};*/
