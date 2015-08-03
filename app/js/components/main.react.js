@@ -13,11 +13,14 @@ var Main = React.createClass({
   addPoint: function() {
     this.transitionTo('category-choice');
   },
+  componentDidMount: function() {
+    this.transitionTo('default');
+  },
   render: function() {
     var small = this.getPath() !== '/';
     return (
     <section id="main">
-      <Header addPoint={this.addPoint} goBack={this.goBack} />
+      <Header addPoint={this.addPoint} goBack={() => { this.goBack(); }} />
       <MapComponent small={small}/>
       <RouteHandler />
     </section>

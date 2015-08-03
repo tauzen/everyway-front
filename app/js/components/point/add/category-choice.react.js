@@ -19,7 +19,7 @@ var CategoryChoice = React.createClass({
                   className="btn-big"
                   data-marker-category="facility"
                   id="btn-type-select-facility"
-                  onClick={() => this.transitionTo('facility-choice')}>
+                  onClick={() => this.transitionTo('kind-choice', {category: 'facility'})}>
                 </button>
                 <p>udogodnienie</p>
               </div>
@@ -28,7 +28,7 @@ var CategoryChoice = React.createClass({
                   className="btn-big"
                   data-marker-category="obstacle"
                   id="btn-type-select-obstacle"
-                  onClick={() => this.transitionTo('obstacle-choice')}>
+                  onClick={() => this.transitionTo('kind-choice', {category: 'obstacle'})}>
                 </button>
                 <p>przeszkoda</p>
               </div>
