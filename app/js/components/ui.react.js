@@ -5,6 +5,6 @@ var Router = require('react-router');
 
 var routes = require('./config/routes.react');
 
-Router.run(routes, function(Root) {
-  React.render(<Root />, document.getElementById('easy-city-app'));
+Router.run(routes, (Root, state) => {
+  React.render(<Root {...state} />, document.getElementById('easy-city-app'));
 });

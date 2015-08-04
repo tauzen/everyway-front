@@ -9,31 +9,27 @@ var MapComponent = require('./map/map.react');
 var RouteHandler = Router.RouteHandler;
 
 var Main = React.createClass({
-  mixins: [Router.State, Router.Navigation],
-  addPoint: function() {
-    this.transitionTo('category-choice');
-  },
+  mixins: [Router.Navigation],
   componentDidMount: function() {
     this.transitionTo('default');
   },
+  addPoint: function() {
+    this.transitionTo('category-choice');
+  },
+  placeMarker: function() {
+    console.log('should place marker on the map right now');
+    this.replaceWith('default');
+  },
   render: function() {
-    var small = this.getPath() !== '/';
+    var small = this.props.path !== '/';
     return (
     <section id="main">
       <Header addPoint={this.addPoint} goBack={() => { this.goBack(); }} />
       <MapComponent small={small}/>
-      <RouteHandler />
+      <RouteHandler {...this.props} placeMarker={this.placeMarker} />
     </section>
     );
   }
 });
 
 module.exports = Main;
-
-/*{
-  renderUI: function(id) {
-    var element = id ? document.getElementById(id) :
-                       document.body;
-    React.render(<Main />, element);
-  }
-};*/

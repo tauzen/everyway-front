@@ -66,16 +66,18 @@ var KindChoice = React.createClass({
   mixins: [Router.Navigation, Router.State],
   render: function() {
     var cat = this.getParams().category;
-    var buttons = kinds.filter(k => k.category === cat).map((k) => {
+    var buttons = kinds.filter(k => k.category === cat).map((k, i) => {
       return (
         <KindButton
         category={cat}
         clickHandler={ () => {
-          this.transitionTo('add-point', {category: cat, kind: k.kind});
+          this.props.placeMarker(cat, k.kind);
+          //this.transitionTo('place-marker', {category: cat, kind: k.kind});
         }}
         description={k.description}
         kind={k.kind}
-        style={k.style} />
+        style={k.style}
+        key={i} />
       );
     });
     var category = cat === 'facility' ? 'udogodnienie' : 'przeszkodę';
