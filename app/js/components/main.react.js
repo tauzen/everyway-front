@@ -9,9 +9,12 @@ var MapComponent = require('./map/map.react');
 var RouteHandler = Router.RouteHandler;
 
 var Main = React.createClass({
+  propTypes: {
+    path: React.PropTypes.string.isRequired
+  },
   mixins: [Router.Navigation],
   componentDidMount: function() {
-    this.transitionTo('default');
+    this.replaceWith('default');
   },
   addPoint: function() {
     this.transitionTo('category-choice');
@@ -21,11 +24,14 @@ var Main = React.createClass({
     this.replaceWith('default');
   },
   render: function() {
-    var small = this.props.path !== '/';
+    var mainView = this.props.path === '/';
     return (
     <section id="main">
-      <Header addPoint={this.addPoint} goBack={() => { this.goBack(); }} />
-      <MapComponent small={small}/>
+      <Header
+        addPoint={this.addPoint}
+        backVisible={!mainView}
+        goBack={this.goBack} />
+      <MapComponent small={!mainView}/>
       <RouteHandler {...this.props} placeMarker={this.placeMarker} />
     </section>
     );
