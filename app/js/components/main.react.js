@@ -3,6 +3,7 @@
 var React = require('react');
 var Router = require('react-router');
 
+var PointsStore = require('../stores/points-store');
 var Header = require('./header.react');
 var MapComponent = require('./map/map.react');
 
@@ -13,15 +14,25 @@ var Main = React.createClass({
     path: React.PropTypes.string.isRequired
   },
   mixins: [Router.Navigation],
+  getInitialState: function() {
+    return {
+      newPoint: null
+    };
+  },
+  componentWillMount: function() {
+    PointsStore.addNewPointListener(this._onNewPoint);
+  },
   componentDidMount: function() {
     this.replaceWith('default');
   },
+  componentWillUnmount: function() {
+    PointsStore.removeNewPointListener(this._onNewPoint);
+  },
+  _onNewPoint: function() {
+    this.setState({newPoint: PointsStore.getNewPoint()});
+  },
   addPoint: function() {
     this.transitionTo('category-choice');
-  },
-  placeMarker: function() {
-    console.log('should place marker on the map right now');
-    this.replaceWith('default');
   },
   render: function() {
     var mainView = this.props.path === '/';
@@ -31,8 +42,8 @@ var Main = React.createClass({
         addPoint={this.addPoint}
         backVisible={!mainView}
         goBack={this.goBack} />
-      <MapComponent small={!mainView}/>
-      <RouteHandler {...this.props} placeMarker={this.placeMarker} />
+      <MapComponent newPoint={this.state.newPoint} small={!mainView}/>
+      <RouteHandler {...this.props} />
     </section>
     );
   }

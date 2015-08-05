@@ -18,7 +18,8 @@
     "lato-font": "~1.1.1",
     "geolocation-marker": "*",
     "react": "~0.13.3",
-    "react-router": "~0.13.3"
+    "react-router": "~0.13.3",
+    "lodash": "~3.10.1"
   },
   "devDependencies": {
     "jquery": "~2.1.4"

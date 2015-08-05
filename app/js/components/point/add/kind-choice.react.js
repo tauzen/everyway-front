@@ -4,6 +4,7 @@ var React = require('react');
 var Router = require('react-router');
 
 var KindButton = require('./kind-button.react');
+var PointActions = require('../../../actions/point-actions.js');
 
 var kinds = [
   {
@@ -71,7 +72,7 @@ var KindChoice = React.createClass({
         <KindButton
         category={cat}
         clickHandler={ () => {
-          this.props.placeMarker(cat, k.kind);
+          PointActions.addPoint(k.kind, cat);
           //this.transitionTo('place-marker', {category: cat, kind: k.kind});
         }}
         description={k.description}
