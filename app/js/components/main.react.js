@@ -29,6 +29,7 @@ var Main = React.createClass({
     PointsStore.removeNewPointListener(this._onNewPoint);
   },
   _onNewPoint: function() {
+    console.log('got new point', PointsStore.getNewPoint());
     this.setState({newPoint: PointsStore.getNewPoint()});
   },
   addPoint: function() {

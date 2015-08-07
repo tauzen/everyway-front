@@ -9,6 +9,7 @@
 var $ = require('jquery');
 // GeolocationMarker import
 require('../../bower_components/geolocation-marker/dist/geolocationmarker-compiled.js');
+var GeoLocation = require('./geolocation-helper');
 
 (function(exports) {
   var geocoder = new google.maps.Geocoder();
@@ -155,29 +156,12 @@ require('../../bower_components/geolocation-marker/dist/geolocationmarker-compil
       zIndex: 999
     });
 
-    // Try W3C Geolocation (Preferred)
-    if(navigator.geolocation) {
-      browserSupportFlag = true;
-      navigator.geolocation.getCurrentPosition(function(position) {
-        initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-        map.setCenter(initialLocation);
-      }, function() {
-        handleNoGeolocation(browserSupportFlag);
-      });
-    }
-    // Browser doesn't support Geolocation
-    else {
-      browserSupportFlag = false;
-      handleNoGeolocation(browserSupportFlag);
-    }
-
-    function handleNoGeolocation(errorFlag) {
-      if (errorFlag === true) {
-        alert('Geolocation service failed.');
-      } else {
-        alert('Your browser doesn\'t support geolocation. We\'ve placed you in Siberia.');
-      }
-    }
+    GeoLocation.getPosition(true).then((pos) => {
+      initialLocation = new google.maps.LatLng(pos.lat, pos.lng);
+      map.setCenter(initialLocation);
+    }).catch((err) => {
+      console.error(err);
+    });
   }
 
   var markerMoved = function(marker) {

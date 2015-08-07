@@ -3,14 +3,25 @@
 var ActionConstants = require('../constants/action-constants');
 var MainDispatcher = require('../dispatchers/main-dispatcher');
 
+var APIClient = require('../apiclient').API;
+var GeoLocation = require('../geolocation-helper');
+
 var PointActions = {
   addPoint: function(kind, category) {
-    MainDispatcher.handleViewAction({
-      actionType: ActionConstants.ADD_POINT,
-      kind: kind,
-      category: category
+    GeoLocation.getPosition(false)
+    .then((position) => {
+      let marker = Object.assign(position, { kind, category, state: 'ok' });
+      APIClient.addMarker(marker, (point) => {
+        MainDispatcher.handleViewAction({
+          actionType: ActionConstants.ADD_POINT,
+          point: point
+        });
+      }, (err) => {
+        console.error(err);
+      });
     });
   },
+
   cancelAddPoint: function() {
     MainDispatcher.handleViewAction({
       actionType: ActionConstants.CANCEL_EDIT_POINT

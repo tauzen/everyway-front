@@ -33,10 +33,7 @@ var PointsStore = Object.assign(EventEmitter.prototype, {
     console.log('in store', action);
     switch(action.actionType) {
       case ActionConstants.ADD_POINT:
-        _newPoint = {
-          kind: action.kind,
-          category: action.category
-        };
+        _newPoint = action.point;
         PointsStore.emitNewPoint();
         break;
     }
