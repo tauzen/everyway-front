@@ -57,6 +57,17 @@ var PointActions = {
       actionType: ActionConstants.REMOVE_POINT,
       pointId: pointId
     });
+  },
+
+  getAllPoints: function() {
+    APIClient.getMarkers(null, (points) => {
+      MainDispatcher.handleViewAction({
+        actionType: ActionConstants.RECEIVE_POINTS,
+        points: points
+      });
+    }, (err) => {
+      console.error(err);
+    });
   }
 };
 

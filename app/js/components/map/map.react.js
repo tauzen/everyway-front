@@ -6,6 +6,8 @@ var React = require('react');
 var _ = require('lodash');
 require('../../../../bower_components/geolocation-marker/dist/geolocationmarker-compiled.js');
 
+var KindsStore = require('../../stores/kinds-store');
+
 var MapComponent = React.createClass({
   propTypes: {
     centerLat: React.PropTypes.number.isRequired,
@@ -15,10 +17,14 @@ var MapComponent = React.createClass({
   },
 
   getInitialState: function() {
+    let kindImgs = {};
+    KindsStore.getKinds().forEach(k => kindImgs[k.kind] = k.icon);
+
     return {
       map: null,
       userMarker: null,
-      markers: []
+      markers: [],
+      kindImgs: kindImgs
     };
   },
 
@@ -40,7 +46,6 @@ var MapComponent = React.createClass({
     userMarker.setMarkerOptions({ zIndex: 999 });
 
     this.setState({ map, userMarker });
-    setTimeout(() => this.drawMarkers(), 1000);
   },
 
   shouldComponentUpdate: function(nextProps) {
@@ -62,7 +67,7 @@ var MapComponent = React.createClass({
 
   createMapMarker: function(point) {
     let loc = new google.maps.LatLng(point.lat, point.lng);
-    let img = { url: 'static/img/markers/pochylnia.png' };
+    let img = { url: this.state.kindImgs[point.kind] };
 
     let marker = new google.maps.Marker({
       position: loc,

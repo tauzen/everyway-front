@@ -89,9 +89,9 @@ window.addEventListener('DOMContentLoaded', function() {
   GMap.setMarkerMovedHandler(markerMoved);
   GMap.setMarkerSelectedHandler(markerSelected);
 
-  GMap.init();
-  API.getMarkers(null, function(markers) {
-    GMap.drawMarkers(markers);
-  });
+  //GMap.init();
+  //API.getMarkers(null, function(markers) {
+  //  GMap.drawMarkers(markers);
+  //});
 
 });

@@ -4,6 +4,8 @@ var React = require('react');
 var Router = require('react-router');
 
 var PointsStore = require('../stores/points-store');
+var PointActions = require('../actions/point-actions');
+
 var Header = require('./header.react');
 var MapComponent = require('./map/map.react');
 
@@ -16,22 +18,25 @@ var Main = React.createClass({
   mixins: [Router.Navigation],
   getInitialState: function() {
     return {
-      newPoint: null,
-      points: []
+      newPoint: PointsStore.getNewPoint(),
+      points: PointsStore.getPoints()
     };
   },
   componentWillMount: function() {
-    PointsStore.addNewPointListener(this._onNewPoint);
+    PointsStore.addChangeListener(this._onPointsChange);
   },
   componentDidMount: function() {
     this.replaceWith('default');
+    PointActions.getAllPoints();
   },
   componentWillUnmount: function() {
-    PointsStore.removeNewPointListener(this._onNewPoint);
+    PointsStore.removeChangeListener(this._onPointsChange);
   },
-  _onNewPoint: function() {
-    console.log('got new point', PointsStore.getNewPoint());
-    this.setState({newPoint: PointsStore.getNewPoint()});
+  _onPointsChange: function() {
+    this.setState({
+      newPoint: PointsStore.getNewPoint(),
+      points: PointsStore.getPoints()
+    });
   },
   addPoint: function() {
     this.transitionTo('category-choice');
@@ -41,7 +46,6 @@ var Main = React.createClass({
     // tmp
     let centerLat = 52.401080;
     let centerLng = 16.912615;
-    let points = PointsStore.getPoints();
 
     return (
     <section id="main">
@@ -49,7 +53,12 @@ var Main = React.createClass({
         addPoint={this.addPoint}
         backVisible={!mainView}
         goBack={this.goBack} />
-      <MapComponent centerLat={centerLat} centerLng={centerLng} newPoint={this.state.newPoint} points={points} small={!mainView}/>
+      <MapComponent
+        centerLat={centerLat}
+        centerLng={centerLng}
+        newPoint={this.state.newPoint}
+        points={this.state.points}
+        small={!mainView}/>
       <RouteHandler {...this.props} />
     </section>
     );
