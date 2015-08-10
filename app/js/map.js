@@ -137,7 +137,7 @@ var GeoLocation = require('./geolocation-helper');
   }
 
   function init() {
-    initialLocation = new google.maps.LatLng(startLat, startLng);
+    /*initialLocation = new google.maps.LatLng(startLat, startLng);
     map = new google.maps.Map(document.getElementById('main-map'), {
       zoom: 19,
       center: initialLocation,
@@ -161,7 +161,7 @@ var GeoLocation = require('./geolocation-helper');
       map.setCenter(initialLocation);
     }).catch((err) => {
       console.error(err);
-    });
+    });*/
   }
 
   var markerMoved = function(marker) {

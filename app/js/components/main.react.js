@@ -16,7 +16,8 @@ var Main = React.createClass({
   mixins: [Router.Navigation],
   getInitialState: function() {
     return {
-      newPoint: null
+      newPoint: null,
+      points: []
     };
   },
   componentWillMount: function() {
@@ -36,14 +37,19 @@ var Main = React.createClass({
     this.transitionTo('category-choice');
   },
   render: function() {
-    var mainView = this.props.path === '/';
+    let mainView = this.props.path === '/';
+    // tmp
+    let centerLat = 52.401080;
+    let centerLng = 16.912615;
+    let points = PointsStore.getPoints();
+
     return (
     <section id="main">
       <Header
         addPoint={this.addPoint}
         backVisible={!mainView}
         goBack={this.goBack} />
-      <MapComponent newPoint={this.state.newPoint} small={!mainView}/>
+      <MapComponent centerLat={centerLat} centerLng={centerLng} newPoint={this.state.newPoint} points={points} small={!mainView}/>
       <RouteHandler {...this.props} />
     </section>
     );

@@ -8,8 +8,10 @@ var GeoLocation = require('../geolocation-helper');
 
 var PointActions = {
   addPoint: function(kind, category) {
+    console.log('adding point');
     GeoLocation.getPosition(false)
     .then((position) => {
+      console.log('got position');
       let marker = Object.assign(position, { kind, category, state: 'ok' });
       APIClient.addMarker(marker, (point) => {
         MainDispatcher.handleViewAction({

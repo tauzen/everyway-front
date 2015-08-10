@@ -11,6 +11,8 @@ require('babelify/polyfill');
 
 var ReactUI = require('./components/ui.react');
 //ReactUI.renderUI('easy-city-app');
+var GeoLocation = require('./geolocation-helper');
+GeoLocation.getPosition();
 
 var API = require('./apiclient.js').API;
 var UI = require('./ui').UI;
