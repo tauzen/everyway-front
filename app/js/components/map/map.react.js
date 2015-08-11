@@ -7,13 +7,15 @@ var _ = require('lodash');
 require('../../../../bower_components/geolocation-marker/dist/geolocationmarker-compiled.js');
 
 var KindsStore = require('../../stores/kinds-store');
+var PointActions = require('../../actions/point-actions');
 
 var MapComponent = React.createClass({
   propTypes: {
     centerLat: React.PropTypes.number.isRequired,
     centerLng: React.PropTypes.number.isRequired,
-    editablePoint: React.PropTypes.object,
+    editablePoint: React.PropTypes.bool,
     points: React.PropTypes.array.isRequired,
+    selectedPointId: React.PropTypes.number.isRequired,
     small: React.PropTypes.bool
   },
 
@@ -80,6 +82,17 @@ var MapComponent = React.createClass({
       customInfo: point
     });
 
+    google.maps.event.addListener(marker, 'click', () => {
+      this.state.map.setZoom(19);
+      this.state.map.panTo(marker.getPosition());
+      this.state.map.panBy(0, window.innerHeight / 4);
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function() {
+        marker.setAnimation(null);
+      }, 750);
+      PointActions.showPointDetails(point.id);
+    });
+
     return marker;
   },
 
@@ -105,7 +118,7 @@ var MapComponent = React.createClass({
 
     let markers = newMarkers.concat(oldMarkers);
     if(this.props.editablePoint) {
-      markers.find(m => m.customInfo.id === this.props.editablePoint.id)
+      markers.find(m => m.customInfo.id === this.props.selectedPointId)
       .setDraggable(true);
     }
 

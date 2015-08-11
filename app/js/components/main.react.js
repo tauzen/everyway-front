@@ -15,32 +15,55 @@ var Main = React.createClass({
   propTypes: {
     path: React.PropTypes.string.isRequired
   },
+
   mixins: [Router.Navigation],
+
   getInitialState: function() {
     return {
-      editablePoint: PointsStore.getNewPoint(),
+      selectedPointId: PointsStore.getSelectedPointId(),
+      isNewPoint: PointsStore.isSelectedPointNew(),
+      isEditablePoint: PointsStore.isSelectedPointEditable(),
       points: PointsStore.getPoints()
     };
   },
+
   componentWillMount: function() {
     PointsStore.addChangeListener(this._onPointsChange);
   },
+
   componentDidMount: function() {
     this.replaceWith('default');
     PointActions.getAllPoints();
   },
+
   componentWillUnmount: function() {
     PointsStore.removeChangeListener(this._onPointsChange);
   },
+
   _onPointsChange: function() {
     this.setState({
-      editablePoint: PointsStore.getNewPoint(),
+      selectedPointId: PointsStore.getSelectedPointId(),
+      isNewPoint: PointsStore.isSelectedPointNew(),
+      isEditablePoint: PointsStore.isSelectedPointEditable(),
       points: PointsStore.getPoints()
     });
+    if(this.state.selectedPointId !== -1) {
+      this.transitionTo('point-details', { id: this.state.selectedPointId });
+    }
   },
+
   addPoint: function() {
     this.transitionTo('category-choice');
   },
+
+  backButtonClick: function() {
+    if(this.props.path.startsWith('/point/details')) {
+      this.replaceWith('default');
+    } else {
+      this.goBack();
+    }
+  },
+
   render: function() {
     let mainView = this.props.path === '/';
     // tmp
@@ -52,12 +75,13 @@ var Main = React.createClass({
       <Header
         addPoint={this.addPoint}
         backVisible={!mainView}
-        goBack={this.goBack} />
+        goBack={this.backButtonClick} />
       <MapComponent
         centerLat={centerLat}
         centerLng={centerLng}
-        editablePoint={this.state.editablePoint}
+        editablePoint={this.state.isEditablePoint}
         points={this.state.points}
+        selectedPointId={this.state.selectedPointId}
         small={!mainView}/>
       <RouteHandler {...this.props} />
     </section>
