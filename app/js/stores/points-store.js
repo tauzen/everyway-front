@@ -4,10 +4,10 @@ require('babelify/polyfill');
 var MainDispatcher = require('../dispatchers/main-dispatcher');
 var ActionConstants = require('../constants/action-constants');
 var EventEmitter = require('events').EventEmitter;
+var _ = require('lodash');
 
 var _points = [];
-var _newPoint = null;
-var _editedPoint = null;
+var _editablePoint = null;
 
 var CHANGE_EVENT = 'change';
 
@@ -25,7 +25,7 @@ var PointsStore = Object.assign(EventEmitter.prototype, {
   },
 
   getNewPoint: function() {
-    return _newPoint;
+    return _editablePoint;
   },
 
   getPoints: function() {
@@ -37,7 +37,8 @@ var PointsStore = Object.assign(EventEmitter.prototype, {
     console.log('in store', action);
     switch(action.actionType) {
       case ActionConstants.ADD_POINT:
-        _newPoint = action.point;
+        _editablePoint = action.point;
+        _points = _points.concat([_editablePoint]);
         PointsStore.emitChange();
         break;
       case ActionConstants.RECEIVE_POINTS:

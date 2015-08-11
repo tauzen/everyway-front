@@ -18,7 +18,7 @@ var Main = React.createClass({
   mixins: [Router.Navigation],
   getInitialState: function() {
     return {
-      newPoint: PointsStore.getNewPoint(),
+      editablePoint: PointsStore.getNewPoint(),
       points: PointsStore.getPoints()
     };
   },
@@ -34,7 +34,7 @@ var Main = React.createClass({
   },
   _onPointsChange: function() {
     this.setState({
-      newPoint: PointsStore.getNewPoint(),
+      editablePoint: PointsStore.getNewPoint(),
       points: PointsStore.getPoints()
     });
   },
@@ -56,7 +56,7 @@ var Main = React.createClass({
       <MapComponent
         centerLat={centerLat}
         centerLng={centerLng}
-        newPoint={this.state.newPoint}
+        editablePoint={this.state.editablePoint}
         points={this.state.points}
         small={!mainView}/>
       <RouteHandler {...this.props} />

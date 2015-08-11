@@ -12,6 +12,7 @@ var MapComponent = React.createClass({
   propTypes: {
     centerLat: React.PropTypes.number.isRequired,
     centerLng: React.PropTypes.number.isRequired,
+    editablePoint: React.PropTypes.object,
     points: React.PropTypes.array.isRequired,
     small: React.PropTypes.bool
   },
@@ -51,6 +52,7 @@ var MapComponent = React.createClass({
   shouldComponentUpdate: function(nextProps) {
     console.log('update check');
     return this.props.small !== nextProps.small ||
+           !_.isEqual(this.props.editablePoint, nextProps.editablePoint) ||
            !_.isEqual(this.props.points, nextProps.points);
   },
 
@@ -73,7 +75,7 @@ var MapComponent = React.createClass({
       position: loc,
       title: point.kind,
       icon: img,
-      draggable: true,
+      draggable: false,
       animation: google.maps.Animation.DROP,
       customInfo: point
     });
@@ -82,9 +84,31 @@ var MapComponent = React.createClass({
   },
 
   drawMarkers: function() {
-    this.state.markers.forEach(m => m.setMap(null));
-    let markers = this.props.points.map(p => this.createMapMarker(p));
-    markers.forEach(m => m.setMap(this.state.map));
+    let visiblePointIds = this.props.points.map(p => p.id);
+    let drawnMarkerIds = this.state.markers.map(m => m.customInfo.id);
+
+    let discardedMarkerIds = _.difference(drawnMarkerIds, visiblePointIds);
+    discardedMarkerIds.forEach(id => {
+      let marker = this.state.markers.find(m => m.customInfo.id === id);
+      marker.setMap(null);
+    });
+
+    let newMarkerIds = _.difference(visiblePointIds, drawnMarkerIds);
+    let newMarkers = this.props.points
+    .filter(p => newMarkerIds.indexOf(p.id) !== -1)
+    .map(p => this.createMapMarker(p));
+    newMarkers.forEach(m => m.setMap(this.state.map));
+
+    let oldMarkerIds = _.intersection(drawnMarkerIds, visiblePointIds);
+    let oldMarkers = this.state.markers
+    .filter(m => oldMarkerIds.indexOf(m.customInfo.id) !== -1);
+
+    let markers = newMarkers.concat(oldMarkers);
+    if(this.props.editablePoint) {
+      markers.find(m => m.customInfo.id === this.props.editablePoint.id)
+      .setDraggable(true);
+    }
+
     this.setState({ markers });
   },
 
