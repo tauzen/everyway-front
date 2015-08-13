@@ -57,6 +57,8 @@ var MapComponent = React.createClass({
   shouldComponentUpdate: function(nextProps) {
     console.log('update check');
     return this.props.small !== nextProps.small ||
+           this.props.centerLat !== nextProps.centerlat ||
+           this.props.centerLng !== nextProps.centerLng ||
            !_.isEqual(this.props.editablePoint, nextProps.editablePoint) ||
            !_.isEqual(this.props.points, nextProps.points);
   },
@@ -65,6 +67,11 @@ var MapComponent = React.createClass({
     console.log('Component updated');
     if(!_.isEqual(prevProps.points, this.props.points)) {
       this.drawMarkers();
+    } else if(this.props.centerLat !== prevProps.centerlat ||
+              this.props.centerLng !== prevProps.centerLng) {
+      let loc = new google.maps.LatLng(this.props.centerLat,
+                                       this.props.centerLng);
+      this.state.map.setCenter(loc);
     }
   },
 

@@ -3,6 +3,7 @@
 var React = require('react');
 var Router = require('react-router');
 
+var GeoLocation = require('../geolocation-helper');
 var PointsStore = require('../stores/points-store');
 var PointActions = require('../actions/point-actions');
 
@@ -23,12 +24,17 @@ var Main = React.createClass({
       selectedPointId: PointsStore.getSelectedPointId(),
       isNewPoint: PointsStore.isSelectedPointNew(),
       isEditablePoint: PointsStore.isSelectedPointEditable(),
-      points: PointsStore.getPoints()
+      points: PointsStore.getPoints(),
+      lat: 52.401080,
+      lng: 16.912615
     };
   },
 
   componentWillMount: function() {
     PointsStore.addChangeListener(this._onPointsChange);
+    GeoLocation.getPosition().then(position => {
+      this.setState({ lat: position.lat, lng: position.lng });
+    });
   },
 
   componentDidMount: function() {
@@ -69,10 +75,6 @@ var Main = React.createClass({
                       .find(p => p.id === this.state.selectedPointId);
     }
 
-    // tmp
-    let centerLat = 52.401080;
-    let centerLng = 16.912615;
-
     return (
     <section id="main">
       <Header
@@ -80,8 +82,8 @@ var Main = React.createClass({
         backVisible={!mainView}
         goBack={this.backButtonClick} />
       <MapComponent
-        centerLat={centerLat}
-        centerLng={centerLng}
+        centerLat={this.state.lat}
+        centerLng={this.state.lng}
         editablePoint={this.state.isEditablePoint}
         points={this.state.points}
         selectedPointId={this.state.selectedPointId}
