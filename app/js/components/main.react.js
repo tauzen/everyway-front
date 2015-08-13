@@ -47,9 +47,6 @@ var Main = React.createClass({
       isEditablePoint: PointsStore.isSelectedPointEditable(),
       points: PointsStore.getPoints()
     });
-    if(this.state.selectedPointId !== -1) {
-      this.transitionTo('point-details', { id: this.state.selectedPointId });
-    }
   },
 
   addPoint: function() {
@@ -66,6 +63,12 @@ var Main = React.createClass({
 
   render: function() {
     let mainView = this.props.path === '/';
+    let selectedPoint = null;
+    if(!mainView && this.state.selectedPointId !== -1) {
+      selectedPoint = this.state.points
+                      .find(p => p.id === this.state.selectedPointId);
+    }
+
     // tmp
     let centerLat = 52.401080;
     let centerLng = 16.912615;
@@ -83,7 +86,9 @@ var Main = React.createClass({
         points={this.state.points}
         selectedPointId={this.state.selectedPointId}
         small={!mainView}/>
-      <RouteHandler {...this.props} />
+      <RouteHandler {...this.props}
+        point={selectedPoint}
+        pointId={this.state.selectedPointId} />
     </section>
     );
   }

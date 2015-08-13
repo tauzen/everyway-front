@@ -3,6 +3,7 @@
 /* globals google, GeolocationMarker */
 
 var React = require('react');
+var Navigation = require('react-router').Navigation;
 var _ = require('lodash');
 require('../../../../bower_components/geolocation-marker/dist/geolocationmarker-compiled.js');
 
@@ -18,6 +19,8 @@ var MapComponent = React.createClass({
     selectedPointId: React.PropTypes.number.isRequired,
     small: React.PropTypes.bool
   },
+
+  mixins: [Navigation],
 
   getInitialState: function() {
     let kindImgs = {};
@@ -83,7 +86,7 @@ var MapComponent = React.createClass({
     });
 
     google.maps.event.addListener(marker, 'click', () => {
-      this.state.map.setZoom(19);
+      //this.state.map.setZoom(19);
       this.state.map.panTo(marker.getPosition());
       this.state.map.panBy(0, window.innerHeight / 4);
       marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -91,6 +94,7 @@ var MapComponent = React.createClass({
         marker.setAnimation(null);
       }, 750);
       PointActions.showPointDetails(point.id);
+      this.transitionTo('point-details', { id: point.id });
     });
 
     return marker;
