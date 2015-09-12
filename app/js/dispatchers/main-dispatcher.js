@@ -4,19 +4,9 @@ require('babelify/polyfill');
 var Dispatcher = require('flux').Dispatcher;
 
 var MainDispatcher = Object.assign(new Dispatcher(), {
-  handleViewAction: function(action) {
-    console.log('handleViewAction', action);
-    this.dispatch({
-      source: 'VIEW_ACTION',
-      action: action
-    });
-  },
-  handleMapAction: function(action) {
-    console.log('handleMapAction', action);
-    this.dispatch({
-      source: 'MAP_ACTION',
-      action: action
-    });
+  handleAction: function(source, action) {
+    console.log(`handling action from ${source}`, action);
+    this.dispatch({ source, action });
   }
 });
 

@@ -1,4 +1,4 @@
-module.exports = {
+const Actions = {
   ADD_POINT: 'ADD_POINT',
   CANCEL_ADD_POINT: 'CANCEL_ADD_POINT',
   SAVE_POINT: 'SAVE_POINT',
@@ -9,3 +9,10 @@ module.exports = {
   RECEIVE_POINTS: 'RECEIVE_POINTS',
   SHOW_POINT_DETAILS: 'SHOW_POINT_DETAILS'
 };
+
+const Sources = {
+  VIEW: 'VIEW',
+  SERVER: 'SERVER'
+};
+
+module.exports = { Actions, Sources };

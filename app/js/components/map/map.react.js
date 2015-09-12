@@ -55,7 +55,7 @@ var MapComponent = React.createClass({
   },
 
   shouldComponentUpdate: function(nextProps) {
-    console.log('update check');
+    console.log('shouldComponentUpdate Map');
     return this.props.small !== nextProps.small ||
            this.props.centerLat !== nextProps.centerlat ||
            this.props.centerLng !== nextProps.centerLng ||
@@ -64,7 +64,7 @@ var MapComponent = React.createClass({
   },
 
   componentDidUpdate: function(prevProps) {
-    console.log('Component updated');
+    console.log('componentDidUpdate Map');
     if(!_.isEqual(prevProps.points, this.props.points)) {
       this.drawMarkers();
     } else if(this.props.centerLat !== prevProps.centerlat ||

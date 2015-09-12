@@ -1,6 +1,6 @@
 'use strict';
 
-var ActionConstants = require('../constants/action-constants');
+var { Actions, Sources } = require('../constants/action-constants');
 var MainDispatcher = require('../dispatchers/main-dispatcher');
 
 var APIClient = require('../apiclient').API;
@@ -12,8 +12,8 @@ var PointActions = {
     .then((position) => {
       let marker = Object.assign(position, { kind, category, state: 'ok' });
       APIClient.addMarker(marker, (point) => {
-        MainDispatcher.handleViewAction({
-          actionType: ActionConstants.ADD_POINT,
+        MainDispatcher.handleAction(Sources.SERVER, {
+          actionType: Actions.ADD_POINT,
           point: point
         });
       }, (err) => {
@@ -24,8 +24,8 @@ var PointActions = {
 
   getAllPoints: function() {
     APIClient.getMarkers(null, (points) => {
-      MainDispatcher.handleViewAction({
-        actionType: ActionConstants.RECEIVE_POINTS,
+      MainDispatcher.handleAction(Sources.SERVER, {
+        actionType: Actions.RECEIVE_POINTS,
         points: points
       });
     }, (err) => {
@@ -34,8 +34,8 @@ var PointActions = {
   },
 
   showPointDetails: function(pointId) {
-    MainDispatcher.handleViewAction({
-      actionType: ActionConstants.SHOW_POINT_DETAILS,
+    MainDispatcher.handleAction(Sources.VIEW, {
+      actionType: Actions.SHOW_POINT_DETAILS,
       pointId: pointId
     });
   }

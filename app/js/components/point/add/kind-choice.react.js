@@ -17,6 +17,7 @@ var KindChoice = React.createClass({
         category={cat}
         clickHandler={ () => {
           PointActions.addPoint(k.kind, cat);
+          this.replaceWith('default');
           //this.transitionTo('place-marker', {category: cat, kind: k.kind});
         }}
         description={k.description}
