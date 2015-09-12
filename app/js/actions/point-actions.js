@@ -22,6 +22,15 @@ var PointActions = {
     });
   },
 
+  deletePoint: function(point) {
+    APIClient.deleteMarker(point, () => {
+      MainDispatcher.handleAction(Sources.SERVER, {
+        actionType: Actions.REMOVE_POINT,
+        pointId: point.id
+      });
+    });
+  },
+
   getAllPoints: function() {
     APIClient.getMarkers(null, (points) => {
       MainDispatcher.handleAction(Sources.SERVER, {

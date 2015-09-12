@@ -1,14 +1,18 @@
 'use strict';
 
 var React = require('react');
+var { Navigation } = require('react-router');
 
 var KindsStore = require('../../stores/kinds-store');
+var PointActions = require('../../actions/point-actions');
 
 var PointDetails = React.createClass({
   propTypes: {
     point: React.PropTypes.object,
     pointId: React.PropTypes.number.isRequired
   },
+
+  mixins: [Navigation],
 
   shouldComponentUpdate: function(nextProps) {
     return nextProps.pointId !== -1 &&
@@ -18,6 +22,14 @@ var PointDetails = React.createClass({
   render: function() {
     var kind = KindsStore.getKind(this.props.point.kind);
     var iconStyle = 'icon icon-big ' + kind.style;
+
+    var DEBUG = localStorage.getItem('debug') === 'enabled';
+    var delBtnClassName = 'btn-big' + (!DEBUG ? 'hide' : '');
+    var delBtnClickHandler = () => {
+      this.replaceWith('default');
+      PointActions.deletePoint(this.props.point);
+    };
+
     return (
       <section className="action-section type-obstacle" id="main-details">
         <header id="main-details-type">
@@ -52,7 +64,7 @@ var PointDetails = React.createClass({
                 id="btn-action-awaria">
               </button>
               <p className="awaria">Awaria!</p>
-              <button className="btn-big hide" id="btn-action-del">
+              <button className={delBtnClassName} onClick={delBtnClickHandler}>
                 Usuń
               </button>
             </div>

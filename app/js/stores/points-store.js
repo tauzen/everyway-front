@@ -1,6 +1,8 @@
 'use strict';
 
 require('babelify/polyfill');
+var _ = require('lodash');
+
 var MainDispatcher = require('../dispatchers/main-dispatcher');
 var { Actions } = require('../constants/action-constants');
 var EventEmitter = require('events').EventEmitter;
@@ -63,6 +65,13 @@ var PointsStore = Object.assign(EventEmitter.prototype, {
         _selectedPointId = action.pointId;
         _isSelectedPointNew = false;
         _isSelectedPointEditable = true;
+        PointsStore.emitChange();
+        break;
+      case Actions.REMOVE_POINT:
+        //_.remove(_points, p => p.id === action.pointId);
+        _points = _points.filter(p => p.id !== action.pointId);
+        _isSelectedPointEditable = false;
+        _isSelectedPointNew = false;
         PointsStore.emitChange();
         break;
     }
