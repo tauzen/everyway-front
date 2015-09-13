@@ -9,8 +9,8 @@
 
 require('babelify/polyfill');
 
-var ReactUI = require('./components/main-ui.react');
-ReactUI.renderUI('easy-city-app');
+var ReactUI = require('./components/ui.react');
+//ReactUI.renderUI('easy-city-app');
 
 var API = require('./apiclient.js').API;
 var UI = require('./ui').UI;
@@ -87,9 +87,9 @@ window.addEventListener('DOMContentLoaded', function() {
   GMap.setMarkerMovedHandler(markerMoved);
   GMap.setMarkerSelectedHandler(markerSelected);
 
-  GMap.init();
-  API.getMarkers(null, function(markers) {
-    GMap.drawMarkers(markers);
-  });
+  //GMap.init();
+  //API.getMarkers(null, function(markers) {
+  //  GMap.drawMarkers(markers);
+  //});
 
 });

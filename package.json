@@ -39,6 +39,6 @@
     "uglifyify": "^3.0.1"
   },
   "dependencies": {
-    "react": "^0.13.3"
+    "flux": "^2.0.3"
   }
 }
